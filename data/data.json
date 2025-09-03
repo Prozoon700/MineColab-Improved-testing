@@ -1,0 +1,90 @@
+[
+  {
+    "question": "¿Qué versiones soporta?",
+    "answer": "Depende del Software que uses tendrás disponibles unas versiones u otras. Aún así, en términos generales, están disponibles todas las versiones finales oficiales."
+  },
+  {
+    "question": "¿Qué es MineColab Improved?",
+    "answer": "MineColab Improved es un cuaderno de Jupyter (Jupyter Notebook) desarrollado para ser usado en Google Colab (entorno de ejecución de Jupter Notebooks con planes gratuitos y que dura hasta 12 horas) y que permite la ejecución de servidores de Minecraft de forma simple, pero completa. Permite a los usuarios crear servidores con hasta 12 GB de RAM disponibles y un almacenamiento de 15 GB o más dependiendo de la cantidad que tengan adquirida en Drive."
+  },
+  {
+    "question": "¿Cómo puedo usar Tailscale como servicio de tunneling?",
+    "answer": "Para usar Tailscale como servicio de tunneling necesitarás seguir los siguientes pasos. 1º Mientras estés creando tu servidor selecciona Tailscale como servicio de tunneling (en caso de ya tener un servidor creado puedes usar la función de cambiar servicio de tunneling `🌐 Tunneling options > Change Tunnel Service`) y ejecuta la celda correspondiente. 2º Cuando la celda se ejecute verás que te pide un token. Para obtener tu token dirígete a [obtener tu key](https://login.tailscale.com/admin/settings/keys) y selecciona `Generar una llave de autentificación`. Introduce los detalles necesarios y copia el token generado, posteriormente pega este token en el campo de formulario (lugar detrás del texto que indica que introduzcas el token https://minecolabimproved.wiki.gg/es/images/0/05/Partes_de_una_celda.png) y pulsa ENTER. 3º Espera a que tu servidor termine de iniciar (o en caso de que no lo hayas iniciado, inícialo) y mientras esperas descarga Tailscale para tu dispositivo preferido desde el [enlace oficial](https://tailscale.com/download). Una vez descargado e instalado, inicia sesión con la misma cuenta con la que has generado el token. 4º Una vez tu servidor esté iniciado verás que se genera una máquina con el nombre de colab en el [siguiente panel](https://login.tailscale.com/admin/machines) , simplemente copia la IP (dirección) de esta máquina y cópiala en tu selector de servdiores de Minecraft. ¡Listo, ya podrás acceder a tu servidor de Minecraft!"
+  },
+  {
+    "question": "¿Qué túneles están disponibles actualmente?",
+    "answer": "Actualmente los túneles que pueden ser utilizados en MineColab Improved son: Ngrok, PlayIt, Argo (se requiere un dominio comprado en Cloudflare), Zrok, Tailscale, Localtonet, LocalXpose (beta) y Minekube Connect. ¿Quieres saber más información de cada uno?"
+  },
+  {
+    "question": [
+      "¿Qué es Playit",
+      "¿Qué ventajas tiene PlayIt?",
+      "¿Qué puedo hacer con PlayIt?",
+      "¿Qué desventajas tiene PlayIt"
+    ],
+    "answer": "PlayIt es un servicio de tunneling gratuito que ofrece la posibilidad de conectarte a tu servidor de forma efectiva. Tiene las ventajas de ser completamente gratuito, no requerir instalación en los dispositivos que va a ser usado, no necesitar una gran configuración y ser normalmente rápido. Sin embargo, no se puede elegir la región del túnel (únicamente se puede elegir la región del agente) y esto provoca que en algunos casos cause lag o un mayor ping."
+  },
+  {
+    "question": [
+      "¿Qué es Ngrok",
+      "¿Qué ventajas tiene Ngrok?",
+      "¿Qué puedo hacer con Ngrok?",
+      "¿Qué desventajas tiene Ngrok"
+    ],
+    "answer": "Ngrok es un servicio de tunneling parcialmente gratuito que ofrece la posibilidad de conectarte a tu servidor de forma efectiva y rápida. Tiene las ventajas de ser muy rápido, no requerir instalación en los dispositivos que va a ser usado, no necesitar una gran configuración y permitir seleccionar la región del túnel. Sin embargo, tiene un límite de uso mensual de 1GB (lo cuál suele consumirse en menos de una semana), haciendo que tras esa superarlo no se pueda jugar hasta la siguiente renovación."
+  },
+  {
+    "question": [
+      "¿Qué es Argo",
+      "¿Qué ventajas tiene Argo?",
+      "¿Qué puedo hacer con Argo?",
+      "¿Qué desventajas tiene Argo"
+    ],
+    "answer": "Argo es un servicio de tunneling gratuito, si eres dueño de un dominio en Cloudflare, que ofrece la posibilidad de conectarte a tu servidor de forma efectiva y rápida. Tiene las ventajas de ser muy rápido, no requerir instalación en los dispositivos que va a ser usado y tener una gran capacidad de customización y configuración. Sin embargo, su configuración y puesta en marcha es más tediosa que con otros túneles, y más aún para nuevos usuarios; además de requerir un dominio comprado en Cloudflare."
+  },
+  {
+    "question": [
+      "¿Qué es Zrok",
+      "¿Qué ventajas tiene Zrok?",
+      "¿Qué puedo hacer con Zrok?",
+      "¿Qué desventajas tiene Zrok"
+    ],
+    "answer": "Zrok es un servicio de tunneling completamente gratuito que ofrece la posibilidad de conectarte a tu servidor de forma efectiva y rápida. Tiene las ventajas de ser (normalmente) rápido, no necesitar una gran configuración y funcionar mejor que otros túneles gratuitos. Sin embargo, es necesario instalar la aplicación de Zrok (ejecutable) en el dispositivo a ser usado y realizar una serie de comandos de configuración para poder conectarte a tu servidor."
+  },
+  {
+    "question": [
+      "¿Qué es Tailscale",
+      "¿Qué ventajas tiene Tailscale?",
+      "¿Qué puedo hacer con Tailscale?",
+      "¿Qué desventajas tiene Tailscale"
+    ],
+    "answer": "Tailscale es un servicio de tunneling completamente gratuito que ofrece la posibilidad de conectarte a tu servidor de forma efectiva y rápida. Tiene las ventajas de ser muy rápido y no necesitar una gran configuración. Sin embargo, como pasa con Zrok, es necesario instalar la app de Tailscale en el dispositivo que va a conectarse al servidor, aunque en este caso es mucho más sencilla de usar, pues solamente requiere iniciar sesión con tu cuenta de Tailscale."
+  },
+  {
+    "question": [
+      "¿Qué es Localtonet",
+      "¿Qué ventajas tiene Localtonet?",
+      "¿Qué puedo hacer con Localtonet?",
+      "¿Qué desventajas tiene Localtonet"
+    ],
+    "answer": "Localtonet es un servicio de tunneling parcialmente gratuito que ofrece la posibilidad de conectarte a tu servidor de forma efectiva y rápida. Tiene las ventajas de ser muy rápido, tener una configuración bastante decente aunque no es necesaria de completar y permitir la selección de la región del túnel. Sin embargo, como pasa con Ngrok, tiene un límite de uso de 1GB que al excederse, no permite ser usada hasta la siguiente renovación."
+  },
+  {
+    "question": [
+      "¿Qué es LocalXpose",
+      "¿Qué ventajas tiene LocalXpose?",
+      "¿Qué puedo hacer con LocalXpose?",
+      "¿Qué desventajas tiene LocalXpose"
+    ],
+    "answer": "LocalXpose es un servicio de tunneling completamente gratuito que ofrece la posibilidad de conectarte a tu servidor de forma efectiva y rápida. Tiene las ventajas de ser muy rápido, no necesitar una gran configuración y no requerir instalar ningún programa. Sin embargo, aún está en beta y por tanto no ha sido completamente comprobado su funcionamiento. Aún así te animo a probarlo y comentarnos tus resultados."
+  },
+  {
+    "question": [
+      "¿Qué es Minekube Connect",
+      "¿Qué ventajas tiene Minekube Connect?",
+      "¿Qué puedo hacer con Minekube Connect?",
+      "¿Qué desventajas tiene Minekube Connect"
+    ],
+    "answer": "Minekube Connect es un servicio de tunneling completamente gratuito que ofrece la posibilidad de conectarte a tu servidor de forma efectiva y rápida añadiéndolo a una lista global de servidores en Minekube Connect. Tiene las ventajas de ser muy rápido, debido a sus conexiones P2P ayudadas por una red propia de servidores que aportan estabilidad a la conexión, no necesitar una gran configuración, aportar una capa extra de seguridad a tu servidor y no requerir instalar ningún programa. Sin embargo, debido a que es un Plugin de Minecraft es necesario ejecutarlo con Softwares que contengan librerías de Bukkit o Spigot."
+  }
+]

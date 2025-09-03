@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2025-03-06T08:35:28.943Z",
+    "userId": "613833842918162511",
+    "messageContent": "Test?",
+    "reason": "Cannot read properties of undefined (reading 'productData')",
+    "details": "TypeError: Cannot read properties of undefined (reading 'productData')\n    at generateResponse (file:///home/container/utils/mistral.js:50:15)\n    at generateResponseWithTimeout (file:///home/container/events/messageCreate.js:65:13)\n    at handleMessageCreate (file:///home/container/events/messageCreate.js:43:29)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)",
+    "aiResponse": null,
+    "finalReply": "❌ Hubo un problema al generar la respuesta. Vuelve a intentarlo en unos segundos... Si el problema persiste contacta con un administrador."
+  }
+]

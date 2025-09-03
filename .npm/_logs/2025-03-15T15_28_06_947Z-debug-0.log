@@ -1,0 +1,230 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@11.2.0
+2 info using node@v23.9.0
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/container/.npmrc
+5 silly config load:file:/usr/local/etc/npmrc
+6 verbose title npm install
+7 verbose argv "install"
+8 verbose logfile logs-max:10 dir:/home/container/.npm/_logs/2025-03-15T15_28_06_947Z-
+9 verbose logfile /home/container/.npm/_logs/2025-03-15T15_28_06_947Z-debug-0.log
+10 silly logfile start cleaning logs, removing 1 files
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:271581184 maxSize:67895296 maxEntrySize:33947648
+13 silly idealTree buildDeps
+14 silly reify moves {}
+15 silly audit bulk request {
+15 silly audit   '@discordjs/builders': [ '1.10.1' ],
+15 silly audit   '@discordjs/collection': [ '1.5.3', '2.1.1' ],
+15 silly audit   '@discordjs/formatters': [ '0.6.0' ],
+15 silly audit   '@discordjs/rest': [ '2.4.3' ],
+15 silly audit   '@discordjs/util': [ '1.1.1' ],
+15 silly audit   '@discordjs/voice': [ '0.18.0' ],
+15 silly audit   '@discordjs/ws': [ '1.2.1' ],
+15 silly audit   '@mistralai/mistralai': [ '1.5.0' ],
+15 silly audit   '@sapphire/async-queue': [ '1.5.5' ],
+15 silly audit   '@sapphire/shapeshift': [ '4.0.0' ],
+15 silly audit   '@sapphire/snowflake': [ '3.5.3' ],
+15 silly audit   '@types/node': [ '22.13.5', '18.19.76' ],
+15 silly audit   '@types/node-fetch': [ '2.6.12' ],
+15 silly audit   '@types/ws': [ '8.5.14' ],
+15 silly audit   '@vladfrangu/async_event_emitter': [ '2.4.6' ],
+15 silly audit   'abort-controller': [ '3.0.0' ],
+15 silly audit   agentkeepalive: [ '4.6.0' ],
+15 silly audit   'ansi-regex': [ '2.1.1', '3.0.1' ],
+15 silly audit   assert: [ '2.1.0' ],
+15 silly audit   'async.parallellimit': [ '0.5.2' ],
+15 silly audit   'async.util.eachoflimit': [ '0.5.2' ],
+15 silly audit   'async.util.isarray': [ '0.5.2' ],
+15 silly audit   'async.util.isarraylike': [ '0.5.2' ],
+15 silly audit   'async.util.keyiterator': [ '0.5.2' ],
+15 silly audit   'async.util.keys': [ '0.5.2' ],
+15 silly audit   'async.util.noop': [ '0.5.2' ],
+15 silly audit   'async.util.once': [ '0.5.2' ],
+15 silly audit   'async.util.onlyonce': [ '0.5.2' ],
+15 silly audit   'async.util.parallel': [ '0.5.2' ],
+15 silly audit   'async.util.restparam': [ '0.5.2' ],
+15 silly audit   asynckit: [ '0.4.0' ],
+15 silly audit   'available-typed-arrays': [ '1.0.7' ],
+15 silly audit   axios: [ '1.8.1' ],
+15 silly audit   'balanced-match': [ '1.0.2' ],
+15 silly audit   boolbase: [ '1.0.0' ],
+15 silly audit   boolstring: [ '1.0.2' ],
+15 silly audit   'brace-expansion': [ '1.1.11' ],
+15 silly audit   'call-bind': [ '1.0.8' ],
+15 silly audit   'call-bind-apply-helpers': [ '1.0.2' ],
+15 silly audit   'call-bound': [ '1.0.3' ],
+15 silly audit   cheerio: [ '1.0.0' ],
+15 silly audit   'cheerio-select': [ '2.1.0' ],
+15 silly audit   'cli-color': [ '1.2.0' ],
+15 silly audit   'collapse-white-space': [ '2.1.0' ],
+15 silly audit   'combined-stream': [ '1.0.8' ],
+15 silly audit   'concat-map': [ '0.0.1' ],
+15 silly audit   'css-select': [ '5.1.0' ],
+15 silly audit   'css-what': [ '6.1.0' ],
+15 silly audit   d: [ '1.0.2' ],
+15 silly audit   dasu: [ '0.4.3' ],
+15 silly audit   deepseek: [ '0.0.2' ],
+15 silly audit   'define-data-property': [ '1.1.4' ],
+15 silly audit   'define-properties': [ '1.2.1' ],
+15 silly audit   'delayed-stream': [ '1.0.0' ],
+15 silly audit   'discord-api-types': [ '0.37.119' ],
+15 silly audit   'discord.js': [ '14.18.0' ],
+15 silly audit   'dom-serializer': [ '2.0.0' ],
+15 silly audit   domelementtype: [ '2.3.0' ],
+15 silly audit   domhandler: [ '5.0.3' ],
+15 silly audit   domutils: [ '3.2.2' ],
+15 silly audit   dotenv: [ '16.4.7' ],
+15 silly audit   'dunder-proto': [ '1.0.1' ],
+15 silly audit   'encoding-sniffer': [ '0.2.0' ],
+15 silly audit   entities: [ '4.5.0' ],
+15 silly audit   'es-define-property': [ '1.0.1' ],
+15 silly audit   'es-errors': [ '1.3.0' ],
+15 silly audit   'es-object-atoms': [ '1.1.1' ],
+15 silly audit   'es-set-tostringtag': [ '2.1.0' ],
+15 silly audit   'es5-ext': [ '0.10.64' ],
+15 silly audit   'es6-iterator': [ '2.0.3' ],
+15 silly audit   'es6-symbol': [ '3.1.4' ],
+15 silly audit   'es6-weak-map': [ '2.0.3' ],
+15 silly audit   esniff: [ '2.0.1' ],
+15 silly audit   'event-emitter': [ '0.3.5' ],
+15 silly audit   'event-target-shim': [ '5.0.1' ],
+15 silly audit   ext: [ '1.7.0' ],
+15 silly audit   'fast-deep-equal': [ '3.1.3' ],
+15 silly audit   'follow-redirects': [ '1.15.9' ],
+15 silly audit   'for-each': [ '0.3.5' ],
+15 silly audit   'form-data': [ '4.0.2' ],
+15 silly audit   'form-data-encoder': [ '1.7.2' ],
+15 silly audit   'formdata-node': [ '4.4.1' ],
+15 silly audit   franc: [ '6.2.0' ],
+15 silly audit   fs: [ '0.0.1-security' ],
+15 silly audit   'function-bind': [ '1.1.2' ],
+15 silly audit   'get-intrinsic': [ '1.3.0' ],
+15 silly audit   'get-proto': [ '1.0.1' ],
+15 silly audit   gopd: [ '1.2.0' ],
+15 silly audit   'has-property-descriptors': [ '1.0.2' ],
+15 silly audit   'has-symbols': [ '1.1.0' ],
+15 silly audit   'has-tostringtag': [ '1.0.2' ],
+15 silly audit   hasown: [ '2.0.2' ],
+15 silly audit   htmlparser2: [ '9.1.0' ],
+15 silly audit   'human-time': [ '0.0.2' ],
+15 silly audit   'humanize-ms': [ '1.2.1' ],
+15 silly audit   'iconv-lite': [ '0.6.3' ],
+15 silly audit   inherits: [ '2.0.4' ],
+15 silly audit   'is-arguments': [ '1.2.0' ],
+15 silly audit   'is-callable': [ '1.2.7' ],
+15 silly audit   'is-fullwidth-code-point': [ '2.0.0' ],
+15 silly audit   'is-generator-function': [ '1.1.0' ],
+15 silly audit   'is-nan': [ '1.3.2' ],
+15 silly audit   'is-promise': [ '2.2.2' ],
+15 silly audit   'is-regex': [ '1.2.1' ],
+15 silly audit   'is-typed-array': [ '1.1.15' ],
+15 silly audit   'jsonpath-plus': [ '5.0.7' ],
+15 silly audit   keypress: [ '0.2.1' ],
+15 silly audit   lodash: [ '4.17.21' ],
+15 silly audit   'lodash.snakecase': [ '4.1.1' ],
+15 silly audit   'lru-queue': [ '0.1.0' ],
+15 silly audit   'magic-bytes.js': [ '1.10.0' ],
+15 silly audit   'math-intrinsics': [ '1.1.0' ],
+15 silly audit   memoizee: [ '0.4.17' ],
+15 silly audit   'mime-db': [ '1.52.0' ],
+15 silly audit   'mime-types': [ '2.1.35' ],
+15 silly audit   minimatch: [ '3.0.8' ],
+15 silly audit   minimist: [ '1.2.8' ],
+15 silly audit   ms: [ '2.1.3' ],
+15 silly audit   'n-gram': [ '2.0.2' ],
+15 silly audit   'next-tick': [ '1.1.0' ],
+15 silly audit   'node-domexception': [ '1.0.0' ],
+15 silly audit   'node-fetch': [ '2.7.0' ],
+15 silly audit   'node-fzf': [ '0.5.3' ],
+15 silly audit   'nth-check': [ '2.1.1' ],
+15 silly audit   'object-is': [ '1.1.6' ],
+15 silly audit   'object-keys': [ '1.1.1' ],
+15 silly audit   'object.assign': [ '4.1.7' ],
+15 silly audit   openai: [ '4.86.1' ],
+15 silly audit   'undici-types': [ '5.26.5', '6.20.0' ],
+15 silly audit   parse5: [ '7.2.1' ],
+15 silly audit   'parse5-htmlparser2-tree-adapter': [ '7.1.0' ],
+15 silly audit   'parse5-parser-stream': [ '7.1.2' ],
+15 silly audit   'play-audio': [ '0.5.2' ],
+15 silly audit   'play-dl': [ '1.9.7' ],
+15 silly audit   'possible-typed-array-names': [ '1.1.0' ],
+15 silly audit   'prism-media': [ '1.3.5' ],
+15 silly audit   'proxy-from-env': [ '1.1.0' ],
+15 silly audit   redstar: [ '0.0.2' ],
+15 silly audit   'safe-regex-test': [ '1.1.0' ],
+15 silly audit   'safer-buffer': [ '2.1.2' ],
+15 silly audit   'set-function-length': [ '1.2.2' ],
+15 silly audit   'simple-statistics': [ '7.8.7' ],
+15 silly audit   'string-width': [ '2.1.1' ],
+15 silly audit   'strip-ansi': [ '4.0.0' ],
+15 silly audit   'timers-ext': [ '0.1.8' ],
+15 silly audit   tr46: [ '0.0.3' ],
+15 silly audit   'trigram-utils': [ '2.0.1' ],
+15 silly audit   'ts-mixer': [ '6.0.4' ],
+15 silly audit   tslib: [ '2.8.1' ],
+15 silly audit   ttys: [ '0.0.3' ],
+15 silly audit   type: [ '2.7.3' ],
+15 silly audit   typescript: [ '5.7.3' ],
+15 silly audit   undici: [ '6.21.1' ],
+15 silly audit   util: [ '0.12.5' ],
+15 silly audit   'web-streams-polyfill': [ '4.0.0-beta.3' ],
+15 silly audit   'webidl-conversions': [ '3.0.1' ],
+15 silly audit   'whatwg-encoding': [ '3.1.1' ],
+15 silly audit   'whatwg-mimetype': [ '4.0.0' ],
+15 silly audit   'whatwg-url': [ '5.0.0' ],
+15 silly audit   'which-typed-array': [ '1.1.18' ],
+15 silly audit   ws: [ '8.18.1' ],
+15 silly audit   'yt-search': [ '2.12.1' ],
+15 silly audit   zod: [ '3.24.2' ],
+15 silly audit   'zod-to-json-schema': [ '3.24.3' ]
+15 silly audit }
+16 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 1887ms
+17 silly audit report {
+17 silly audit report   axios: [
+17 silly audit report     {
+17 silly audit report       id: 1102472,
+17 silly audit report       url: 'https://github.com/advisories/GHSA-jr5f-v2jv-69x6',
+17 silly audit report       title: 'axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute URL',
+17 silly audit report       severity: 'high',
+17 silly audit report       vulnerable_versions: '<1.8.2',
+17 silly audit report       cwe: [Array],
+17 silly audit report       cvss: [Object]
+17 silly audit report     }
+17 silly audit report   ],
+17 silly audit report   'jsonpath-plus': [
+17 silly audit report     {
+17 silly audit report       id: 1102423,
+17 silly audit report       url: 'https://github.com/advisories/GHSA-pppg-cpfq-h7wr',
+17 silly audit report       title: 'JSONPath Plus Remote Code Execution (RCE) Vulnerability',
+17 silly audit report       severity: 'critical',
+17 silly audit report       vulnerable_versions: '<10.2.0',
+17 silly audit report       cwe: [Array],
+17 silly audit report       cvss: [Object]
+17 silly audit report     },
+17 silly audit report     {
+17 silly audit report       id: 1102895,
+17 silly audit report       url: 'https://github.com/advisories/GHSA-hw8r-x6gr-5gjp',
+17 silly audit report       title: 'JSONPath Plus allows Remote Code Execution',
+17 silly audit report       severity: 'high',
+17 silly audit report       vulnerable_versions: '<10.3.0',
+17 silly audit report       cwe: [Array],
+17 silly audit report       cvss: [Object]
+17 silly audit report     }
+17 silly audit report   ]
+17 silly audit report }
+18 silly packumentCache corgi:https://registry.npmjs.org/axios cache-miss
+19 silly packumentCache corgi:https://registry.npmjs.org/jsonpath-plus cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/jsonpath-plus 411ms (cache updated)
+21 silly packumentCache corgi:https://registry.npmjs.org/jsonpath-plus set size:undefined disposed:false
+22 http fetch GET 200 https://registry.npmjs.org/axios 513ms (cache updated)
+23 silly packumentCache corgi:https://registry.npmjs.org/axios set size:undefined disposed:false
+24 silly packumentCache corgi:https://registry.npmjs.org/yt-search cache-miss
+25 http fetch GET 200 https://registry.npmjs.org/yt-search 200ms (cache updated)
+26 silly packumentCache corgi:https://registry.npmjs.org/yt-search set size:undefined disposed:false
+27 verbose cwd /home/container
+28 verbose os Linux 6.1.0-23-amd64
+29 verbose node v23.9.0
+30 verbose npm  v11.2.0
+31 verbose exit 0
+32 info ok

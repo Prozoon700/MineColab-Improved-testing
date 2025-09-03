@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2025-03-11T18:41:52.829Z",
+    "userId": "762281328733192223",
+    "messageContent": "minekube?",
+    "reason": "Cannot read properties of undefined (reading 'y_soporte')",
+    "details": "TypeError: Cannot read properties of undefined (reading 'y_soporte')\n    at generateResponse (file:///home/container/utils/mistral.js:68:42)\n    at generateResponseWithTimeout (file:///home/container/events/messageCreate.js:78:13)\n    at handleMessageCreate (file:///home/container/events/messageCreate.js:54:37)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)",
+    "aiResponse": null,
+    "finalReply": "❌ There was a problem generating the response. Please try again in a few seconds... If the problem persists, please contact an administrator."
+  },
+  {
+    "timestamp": "2025-03-11T18:42:54.095Z",
+    "userId": "762281328733192223",
+    "messageContent": "minekube?",
+    "reason": "Cannot read properties of undefined (reading 'oficial')",
+    "details": "TypeError: Cannot read properties of undefined (reading 'oficial')\n    at generateResponse (file:///home/container/utils/mistral.js:68:52)\n    at generateResponseWithTimeout (file:///home/container/events/messageCreate.js:78:13)\n    at handleMessageCreate (file:///home/container/events/messageCreate.js:54:37)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)",
+    "aiResponse": null,
+    "finalReply": "❌ There was a problem generating the response. Please try again in a few seconds... If the problem persists, please contact an administrator."
+  }
+]
