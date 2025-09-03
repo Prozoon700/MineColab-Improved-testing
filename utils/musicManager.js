@@ -174,7 +174,7 @@ class MusicManager {
 }
 
 let musicManager;
-export function musicManager(client) {
+export function initMusicManager(client) {
     musicManager = new MusicManager(client);
     musicManager.manager.init(client.user.id);
     return musicManager;
