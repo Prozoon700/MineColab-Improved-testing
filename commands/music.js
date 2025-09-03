@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { initMusicManager } from '../utils/musicManager.js';
+import { initMusicManager, musicManager } from '../bot.js';
 
 export const data = new SlashCommandBuilder()
     .setName('music')
@@ -93,8 +93,8 @@ async function handlePlay(interaction) {
     await interaction.deferReply();
 
     try {
-        await initMusicManager.join(member.voice.channel);
-        const track = await initMusicManager.add(query);
+        await musicManager.join(member.voice.channel);
+        const track = await musicManager.add(query, interaction);
 
         if (!track) {
             return interaction.editReply('❌ No se pudo encontrar la canción.');
@@ -114,8 +114,8 @@ async function handlePlay(interaction) {
 
         await interaction.editReply({ embeds: [embed] });
 
-        if (!initMusicManager.isPlaying) {
-            initMusicManager.play();
+        if (!musicManager.isPlaying) {
+            musicManager.play(interaction.guild.id);
         }
     } catch (error) {
         console.error('Error en play:', error);
@@ -124,41 +124,41 @@ async function handlePlay(interaction) {
 }
 
 async function handlePause(interaction) {
-    if (!initMusicManager.isPlaying) {
+    if (!musicManager.isPlaying) {
         return interaction.reply({ 
             content: '❌ No hay música reproduciéndose.', 
             ephemeral: true 
         });
     }
 
-    initMusicManager.pause();
+    musicManager.pause(interaction.guild.id);
     await interaction.reply('⏸️ **Música pausada**');
 }
 
 async function handleResume(interaction) {
-    initMusicManager.resume();
+    musicManager.resume(interaction.guild.id);
     await interaction.reply('▶️ **Música reanudada**');
 }
 
 async function handleStop(interaction) {
-    initMusicManager.stop();
+    musicManager.stop(interaction.guild.id);
     await interaction.reply('⏹️ **Música detenida y cola limpiada**');
 }
 
 async function handleSkip(interaction) {
-    if (!initMusicManager.isPlaying) {
+    if (!musicManager.isPlaying) {
         return interaction.reply({ 
             content: '❌ No hay música reproduciéndose.', 
             ephemeral: true 
         });
     }
 
-    initMusicManager.skip();
+    musicManager.skip(interaction.guild.id);
     await interaction.reply('⏭️ **Canción saltada**');
 }
 
 async function handleQueue(interaction) {
-    const queueInfo = initMusicManager.getQueue();
+    const queueInfo = musicManager.getQueue(interaction.guild.id);
 
     if (!queueInfo.current && queueInfo.queue.length === 0) {
         return interaction.reply('❌ La cola está vacía.');
@@ -200,24 +200,24 @@ async function handleQueue(interaction) {
 }
 
 async function handleShuffle(interaction) {
-    if (initMusicManager.getQueue().queue.length === 0) {
+    if (musicManager.getQueue(interaction.guild.id).queue.length === 0) {
         return interaction.reply({ 
             content: '❌ No hay canciones en la cola para mezclar.', 
             ephemeral: true 
         });
     }
 
-    initMusicManager.shuffle();
+    musicManager.shuffle(interaction.guild.id);
     await interaction.reply('🔀 **Cola mezclada**');
 }
 
 async function handleLoop(interaction) {
-    const loopState = initMusicManager.toggleLoop();
+    const loopState = musicManager.toggleLoop(interaction.guild.id);
     await interaction.reply(`🔁 **Bucle:** ${loopState ? '✅ ACTIVADO' : '❌ DESACTIVADO'}`);
 }
 
 async function handleLeave(interaction) {
-    initMusicManager.leave();
+    musicManager.leave(interaction.guild.id);
     await interaction.reply('👋 **Bot desconectado del canal de voz**');
 }
 

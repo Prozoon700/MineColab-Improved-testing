@@ -3,8 +3,10 @@ import { readFile } from 'fs/promises';
 import { handleMessageCreate } from './events/messageCreate.js';
 import { handleInteractionCreate } from './events/interactionCreate.js';
 import { deployCommands } from './commands/commands-deployer.js';
+import { initMusicManager } from "./utils/musicManager.js";
 
 const config = JSON.parse(await readFile(new URL('./config.json', import.meta.url)));
+export let musicManager;
 
 // Manejo de errores no capturados
 process.on('unhandledRejection', (reason, promise) => {
@@ -42,6 +44,9 @@ async function main() {
             console.log(`📊 Conectado a ${client.guilds.cache.size} servidor(es)`);
             console.log(`🔧 Autoresponder: ${config.autoResponder ? 'ACTIVADO' : 'DESACTIVADO'}`);
             
+            musicManager = initMusicManager(client);
+            console.log("🎵 MusicManager inicializado");
+
             // Establecer estado del bot
             client.user.setActivity('MineColab Improved | !help', { type: 'PLAYING' });
         });
