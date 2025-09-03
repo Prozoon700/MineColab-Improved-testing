@@ -86,5 +86,14 @@
       "¿Qué desventajas tiene Minekube Connect"
     ],
     "answer": "Minekube Connect es un servicio de tunneling completamente gratuito que ofrece la posibilidad de conectarte a tu servidor de forma efectiva y rápida añadiéndolo a una lista global de servidores en Minekube Connect. Tiene las ventajas de ser muy rápido, debido a sus conexiones P2P ayudadas por una red propia de servidores que aportan estabilidad a la conexión, no necesitar una gran configuración, aportar una capa extra de seguridad a tu servidor y no requerir instalar ningún programa. Sin embargo, debido a que es un Plugin de Minecraft es necesario ejecutarlo con Softwares que contengan librerías de Bukkit o Spigot."
+  },
+  {
+    "question": [
+      "¿Se puede utilizar MineColab Improved en otros servicios de ejecución que no sean Google Colab?",
+      "¿Puedo no utilizar Google Colab?, ¿Podría utilizar otro servicio en vez de Colab?, ¿Debo utilizar Colab siempre?"
+    ],
+    "answer": "Sí. Actualmente MineColab Improved está desarrollado para ser ejecutado mediante Google Colab. Aunque la programación real está basada en un Jupyter Notebook, contiene elementos únicos de Google Colab como comandos mágicos (`!` o `%`), los cuáles únicamente pueden ser utilizados en entornos de Google Colab, o entornos emulados con comandos básicos. ¿Esto que significa? Sencillamente, para nuestros usuarios lo más simple y rápido es utilizar Google Colab, puesto que aporta suficientes recursos a los usuarios para poder ejecutar sus servidores sin problemas y un panel web desde el que poder controlar el servidor.",
+    "addedBy": "prozoon700",
+    "addedAt": "2025-09-03T11:04:09.354Z"
   }
 ]
