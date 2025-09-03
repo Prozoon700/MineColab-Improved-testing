@@ -9,9 +9,11 @@ class MusicManager {
         this.manager = new Manager({
             nodes: [
                 {
-                    host: "localhost",     // ⚡ Cambia si Lavalink no está en el mismo servidor
+                    host: "127.0.0.1",     // ⚡ Cambia si Lavalink no está en el mismo servidor
                     port: 2333,
                     password: "!68b826eb#ww1",
+                    retryAmount: 5,
+                    retryDelay: 2000
                 },
             ],
             send: (id, payload) => {

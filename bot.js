@@ -1,11 +1,13 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { readFile } from 'fs/promises';
 import { handleMessageCreate } from './events/messageCreate.js';
-import { handleInteractionCreate } from './events/interactionCreate.js';
+import { handleInteractionCreate, localCommands } from './events/interactionCreate.js';
 import { deployCommands } from './commands/commands-deployer.js';
 import { initMusicManager } from "./utils/musicManager.js";
 
 const config = JSON.parse(await readFile(new URL('./config.json', import.meta.url)));
+
+export let musicManager;
 
 // Manejo de errores no capturados
 process.on('unhandledRejection', (reason, promise) => {
@@ -27,8 +29,6 @@ const client = new Client({
         GatewayIntentBits.GuildMembers
     ],
 });
-
-export let musicManager;
 
 console.log('🚀 Bot inicializándose...');
 
