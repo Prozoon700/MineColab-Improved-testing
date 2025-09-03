@@ -11,7 +11,7 @@ class MusicManager {
                 {
                     host: "localhost",     // ⚡ Cambia si Lavalink no está en el mismo servidor
                     port: 2333,
-                    password: "youshallnotpass",
+                    password: "!68b826eb#ww1",
                 },
             ],
             send: (id, payload) => {
