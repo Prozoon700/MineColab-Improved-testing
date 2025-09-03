@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { initMusicManager, musicManager } from '../bot.js';
+import { musicManager } from '../bot.js';
 
 export const data = new SlashCommandBuilder()
     .setName('music')
