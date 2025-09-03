@@ -1,4 +1,4 @@
-import { uploadFile, generateResponse, generateResponseWithContext } from '../utils/mistral.js';
+import { generateResponse, generateResponseWithContext } from '../utils/mistral.js';
 import fetch from 'node-fetch';
 import { logErrorToFile } from '../logs/logError.js';
 import { addMessageToTicket, getTicketMessages, isTicketChannel } from '../utils/ticketManager.js';
@@ -17,6 +17,8 @@ export async function handleMessageCreate(client, message) {
     
     const config = JSON.parse(await readFile(new URL('../config.json', import.meta.url)));
     const { productData, data: manualData } = await loadProductData();
+
+    var image_url = [];
 
     // Verificar si es un canal de ticket
     const isTicket = isTicketChannel(message.channel.id, config) || 
@@ -39,6 +41,10 @@ export async function handleMessageCreate(client, message) {
         }
     }
 
+    if (config.excludedChannels.includes(message.channel.id)) {
+        return;
+    }
+
     // Sistema de autorespuesta
     if (getAutoResponder()) {
         // Verificar canal de testing si está en modo testing
@@ -51,32 +57,24 @@ export async function handleMessageCreate(client, message) {
             return;
         }
 
-        // Manejo de archivos adjuntos
-        if (message.attachments.size > 0) {
-            try {
-                for (const file of message.attachments.values()) {
-                    // Descargar archivo desde Discord
-                    const res = await fetch(file.url);
-                    const arrayBuffer = await res.arrayBuffer();
-                
-                    // Convertir a Uint8Array
-                    const uint8Content = new Uint8Array(arrayBuffer);
-                
-                    // Subir a Mistral
-                    const result = await uploadFile({
-                        fileName: file.name,
-                        content: uint8Content
-                    });
-                
-                    await message.reply(`📎 Archivo "${file.name}" procesado correctamente. ID: ${result.id}`);
-                }
-            } catch (error) {
-                console.error('Error procesando archivos:', error);
-                await message.reply('❌ Hubo un error procesando los archivos.');
-            }
-        }
         // Responder a preguntas o en tickets
-        else if (message.content.trim().endsWith('?') || isTicket) {
+        else if (message.content.includes('?') || message.content.includes('.mi') || message.content.includes('@1344790741469364416') || isTicket) {
+            // Manejo de archivos adjuntos
+            if (message.attachments.size > 0) {
+                try {
+                    image_url = [];
+                
+                    for (const file of message.attachments.values()) {
+                        image_url.push(file.url);
+                    
+                        //await message.reply(`📎 Archivo "${file.name}" procesado correctamente.`);
+                    }
+                } catch (error) {
+                    console.error('Error procesando archivos:', error);
+                    await message.reply('❌ Hubo un error procesando los archivos.');
+                }
+            }
+            
             const detectedLang = franc(message.content);
             console.log("Idioma detectado:", detectedLang);
             
@@ -101,14 +99,16 @@ export async function handleMessageCreate(client, message) {
                         message.content, 
                         [], 
                         manualData, 
-                        ticketMessages
+                        ticketMessages,
+                        image_url
                     );
                 } else {
                     // Para canales normales, usar lógica estándar
                     aiResponse = await generateResponseWithTimeout(
                         message.content, 
                         [], 
-                        manualData
+                        manualData,
+                        image_url
                     );
                 }
                 
@@ -148,7 +148,7 @@ export async function handleMessageCreate(client, message) {
     // Función con timeout para generar respuesta
     async function generateResponseWithTimeout(question, learningData, manualData, ticketContext = null, timeoutMs = 15000) {
         return Promise.race([
-            ticketContext ? 
+            ticketContext.includes(message.channel.id) ? 
                 generateResponseWithContext(question, learningData, manualData, productData, ticketContext) :
                 generateResponse(question, learningData, manualData, productData),
             new Promise((_, reject) =>

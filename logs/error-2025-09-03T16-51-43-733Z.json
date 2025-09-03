@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-09-03T16:51:43.733Z",
+  "error": {
+    "date": "2025-09-03T16:51:43.732Z",
+    "reason": "Cannot read properties of undefined (reading 'username')",
+    "details": "TypeError: Cannot read properties of undefined (reading 'username')\n    at file:///workspaces/MineColab-Improved-testing/utils/mistral.js:169:69\n    at Array.map (<anonymous>)\n    at generateResponseWithContext (file:///workspaces/MineColab-Improved-testing/utils/mistral.js:168:43)\n    at generateResponseWithTimeout (file:///workspaces/MineColab-Improved-testing/events/messageCreate.js:153:17)\n    at handleMessageCreate (file:///workspaces/MineColab-Improved-testing/events/messageCreate.js:108:40)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"
+  },
+  "context": {
+    "messageContent": "?",
+    "userId": "762281328733192223",
+    "channelId": "1327966840013455390",
+    "isTicket": false
+  },
+  "response": {
+    "aiResponse": null,
+    "finalReply": "❌ There was a problem generating the response. Please try again in a few seconds... If the problem persists, please contact an administrator."
+  }
+}

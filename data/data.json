@@ -104,5 +104,22 @@
     "answer": "Claro que sí. Dinos que necesitas y trataremos de ayudarte lo antes posible.",
     "addedBy": "prozoon700",
     "addedAt": "2025-09-03T14:15:37.440Z"
+  },
+  {
+    "question": [
+      "¿Puedes leer archivos?",
+      "¿Puedes analizar archivos?"
+    ],
+    "answer": "Yo, como bot de soporte a los usuarios sí soy capaz de leer archivos de logs, e incluso puedo analizar imágenes.",
+    "addedBy": "prozoon700",
+    "addedAt": "2025-09-03T15:01:52.130Z"
+  },
+  {
+    "question": [
+      "que es minecolab?"
+    ],
+    "answer": "## ¿Qué es MineColab Improved?  MineColab Improved es una herramienta que te permite crear y ejecutar un servidor de Minecraft directamente desde tu Google Drive, utilizando Google Colab, un entorno gratuito basado en Jupyter Notebook y Ubuntu.  MineColab Improved se enfoca en tres aspectos clave:  - **Facilidad de uso**: Está diseñado para ser fácil de configurar, sin necesidad de conocimientos avanzados sobre servidores. - **Estabilidad**: Ofrece una experiencia estable al ejecutar el servidor en la nube, sin depender de tu hardware local. - **Accesibilidad**: Al usar Google Colab y Drive, no es necesario pagar por alojamiento ni mantener tu computadora encendida para ejecutar el servidor.",
+    "addedBy": "hellowordmed",
+    "addedAt": "2025-09-03T16:10:16.116Z"
   }
 ]

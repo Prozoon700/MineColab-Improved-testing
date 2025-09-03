@@ -39,6 +39,10 @@ class MusicManager {
             return this.connections.get(guildId);
         }
 
+        if (!member.voice.channel || !member.voice.channel.joinable) {
+            return interaction.reply({ content: 'No puedo unirme a tu canal de voz.', ephemeral: true });
+        }
+
         const connection = joinVoiceChannel({
             channelId: channel.id,
             guildId: guildId,
@@ -163,11 +167,13 @@ class MusicManager {
                 throw new Error('Live streams are not supported');
             }
 
-            const stream = ytdl(song.url, {
-                filter: 'audioonly',
-                highWaterMark: 1 << 25,
-                quality: 'lowestaudio'
-            });
+            let stream;
+            try {
+                stream = ytdl(song.url, { filter: 'audioonly', highWaterMark: 1<<25, quality: 'lowestaudio' });
+            } catch (err) {
+                console.error('Error creando stream:', err);
+                return false;
+            }
 
             const resource = createAudioResource(stream, {
                 inlineVolume: true
