@@ -45,7 +45,7 @@ export async function isRelatedToMineColab(question) {
 }
 
 // Generar respuesta estándar
-export async function generateResponse(userQuestion, learningData, manualData) {
+export async function generateResponse(userQuestion, learningData, manualData, productData) {
     const formattedFAQ = data.map(pair => {
         const questions = Array.isArray(pair.question) ? pair.question : [pair.question];
         return questions.map(q => `Pregunta: ${q}\nRespuesta: ${pair.answer}`).join('\n\n');
@@ -100,7 +100,7 @@ Si el mensaje puede contener más información, SUGIERE QUE TE PREGUNTE EL USUAR
 }
 
 // Generar respuesta con contexto (para tickets)
-export async function generateResponseWithContext(userQuestion, learningData, manualData, ticketContext) {
+export async function generateResponseWithContext(userQuestion, learningData, manualData, productData, ticketContext) {
     const formattedFAQ = data.map(pair => {
         const questions = Array.isArray(pair.question) ? pair.question : [pair.question];
         return questions.map(q => `Pregunta: ${q}\nRespuesta: ${pair.answer}`).join('\n\n');

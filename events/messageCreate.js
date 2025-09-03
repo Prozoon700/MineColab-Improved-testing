@@ -5,6 +5,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { readFile } from 'fs/promises';
+import { loadProductData } from '../data-manager.js';
 import { getAutoResponder } from '../utils/configManager.js';
 import { franc } from 'franc';
 
@@ -15,7 +16,7 @@ export async function handleMessageCreate(client, message) {
     if (message.author.bot) return;
     
     const config = JSON.parse(await readFile(new URL('../config.json', import.meta.url)));
-    const manualData = JSON.parse(await readFile(new URL('../data/data.json', import.meta.url)));
+    const { productData, data: manualData } = await loadProductData();
 
     // Verificar si es un canal de ticket
     const isTicket = isTicketChannel(message.channel.id, config) || 
@@ -149,8 +150,8 @@ export async function handleMessageCreate(client, message) {
     async function generateResponseWithTimeout(question, learningData, manualData, ticketContext = null, timeoutMs = 15000) {
         return Promise.race([
             ticketContext ? 
-                generateResponseWithContext(question, learningData, manualData, ticketContext) :
-                generateResponse(question, learningData, manualData),
+                generateResponseWithContext(question, learningData, manualData, productData, ticketContext) :
+                generateResponse(question, learningData, manualData, productData),
             new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Timeout generando la respuesta...')), timeoutMs)
             )
