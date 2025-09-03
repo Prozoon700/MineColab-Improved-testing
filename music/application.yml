@@ -3,7 +3,7 @@ server:
 
 lavalink:
   server:
-    port: 2334          # puerto de audio
+    port: 5000          # puerto de audio
     bindAddress: 0.0.0.0
     password: "!68b826eb#ww1"
     sources:

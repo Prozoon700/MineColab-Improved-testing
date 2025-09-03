@@ -1,183 +1,318 @@
-import { Manager } from "erela.js";
-import { readFile } from "fs/promises";
+import { 
+    createAudioPlayer, 
+    createAudioResource, 
+    joinVoiceChannel, 
+    AudioPlayerStatus, 
+    VoiceConnectionStatus,
+    generateDependencyReport
+} from '@discordjs/voice';
+import ytdl from '@distube/ytdl-core';
+import yts from 'yt-search';
 
-const config = JSON.parse(await readFile(new URL("../config.json", import.meta.url)));
+console.log(generateDependencyReport());
 
 class MusicManager {
-    constructor(client) {
-        this.client = client;
-        this.manager = new Manager({
-            nodes: [
-                {
-                    host: "127.0.0.1",     // ⚡ Cambia si Lavalink no está en el mismo servidor
-                    port: 2334,
-                    password: "!68b826eb#ww1",
-                    retryAmount: 5,
-                    retryDelay: 2000
-                },
-            ],
-            send: (id, payload) => {
-                const guild = this.client.guilds.cache.get(id);
-                if (guild) guild.shard.send(payload);
-            },
-        });
+    constructor() {
+        this.queues = new Map(); // Una cola por guild
+        this.connections = new Map();
+        this.players = new Map();
+    }
 
-        this.manager.on("nodeConnect", (node) =>
-            console.log(`✅ Nodo ${node.options.identifier} conectado`)
-        );
-
-        this.manager.on("nodeError", (node, error) =>
-            console.error(`❌ Error en nodo ${node.options.identifier}:`, error)
-        );
-
-        this.manager.on("trackStart", (player, track) => {
-            const channel = this.client.channels.cache.get(player.textChannel);
-            if (channel) channel.send(`🎶 Reproduciendo: **${track.title}**`);
-        });
-
-        this.manager.on("queueEnd", (player) => {
-            const channel = this.client.channels.cache.get(player.textChannel);
-            if (channel) channel.send("✅ Cola terminada.");
-            player.destroy();
-        });
-
-        // Conectar el manager a Discord
-        client.on("raw", (d) => this.manager.updateVoiceState(d));
-
-        this.loop = "none"; // "none" | "track" | "queue"
+    getGuildData(guildId) {
+        if (!this.queues.has(guildId)) {
+            this.queues.set(guildId, {
+                songs: [],
+                currentSong: null,
+                loop: 'none', // 'none', 'song', 'queue'
+                volume: 0.5,
+                isPlaying: false,
+                isPaused: false
+            });
+        }
+        return this.queues.get(guildId);
     }
 
     async join(channel) {
-        const player = this.manager.create({
-            guild: channel.guild.id,
-            voiceChannel: channel.id,
-            textChannel: channel.guild.systemChannelId || channel.id,
-            selfDeafen: true,
+        const guildId = channel.guild.id;
+        
+        if (this.connections.has(guildId)) {
+            return this.connections.get(guildId);
+        }
+
+        const connection = joinVoiceChannel({
+            channelId: channel.id,
+            guildId: guildId,
+            adapterCreator: channel.guild.voiceAdapterCreator,
         });
 
-        if (player.state !== "CONNECTED") player.connect();
-        return player;
+        const player = createAudioPlayer();
+        
+        connection.subscribe(player);
+        
+        this.connections.set(guildId, connection);
+        this.players.set(guildId, player);
+
+        // Event handlers
+        connection.on(VoiceConnectionStatus.Disconnected, () => {
+            this.cleanup(guildId);
+        });
+
+        connection.on(VoiceConnectionStatus.Destroyed, () => {
+            this.cleanup(guildId);
+        });
+
+        player.on(AudioPlayerStatus.Idle, () => {
+            this.handleSongEnd(guildId);
+        });
+
+        player.on('error', error => {
+            console.error('Audio player error:', error);
+            this.handleSongEnd(guildId);
+        });
+
+        return connection;
     }
 
-    leave(guildId) {
-        const player = this.manager.players.get(guildId);
-        if (player) {
-            player.destroy();
+    async handleSongEnd(guildId) {
+        const guildData = this.getGuildData(guildId);
+        
+        if (guildData.loop === 'song' && guildData.currentSong) {
+            // Repetir la canción actual
+            this.playSong(guildId, guildData.currentSong);
+        } else if (guildData.loop === 'queue' && guildData.currentSong) {
+            // Añadir la canción actual al final de la cola
+            guildData.songs.push(guildData.currentSong);
+            this.playNext(guildId);
+        } else {
+            // Reproducir siguiente canción
+            this.playNext(guildId);
         }
     }
 
-    async search(query, requester) {
-        const res = await this.manager.search(query, requester);
-        if (res.loadType === "NO_MATCHES" || res.loadType === "LOAD_FAILED")
+    async search(query) {
+        try {
+            // Si es una URL de YouTube
+            if (ytdl.validateURL(query)) {
+                const info = await ytdl.getInfo(query);
+                return {
+                    title: info.videoDetails.title,
+                    url: query,
+                    duration: parseInt(info.videoDetails.lengthSeconds),
+                    thumbnail: info.videoDetails.thumbnails[0]?.url,
+                    author: info.videoDetails.author.name,
+                    isLive: info.videoDetails.isLiveContent
+                };
+            }
+
+            // Buscar en YouTube
+            const results = await yts(query);
+            if (!results.videos.length) return null;
+
+            const video = results.videos[0];
+            return {
+                title: video.title,
+                url: video.url,
+                duration: video.duration.seconds,
+                thumbnail: video.thumbnail,
+                author: video.author.name,
+                isLive: false
+            };
+        } catch (error) {
+            console.error('Error en búsqueda:', error);
             return null;
-        return res.tracks[0];
+        }
     }
 
-    async add(query, message) {
-        const track = await this.search(query, message.author);
-        if (!track) return null;
+    async add(query, guildId) {
+        const song = await this.search(query);
+        if (!song) return null;
 
-        const player = this.manager.players.get(message.guild.id);
-        if (!player) return null;
+        const guildData = this.getGuildData(guildId);
+        guildData.songs.push(song);
 
-        player.queue.add(track);
-
-        if (!player.playing && !player.paused && !player.queue.size) {
-            player.play();
+        // Si no hay música reproduciéndose, empezar a reproducir
+        if (!guildData.isPlaying) {
+            this.playNext(guildId);
         }
 
-        return {
-            title: track.title,
-            url: track.uri,
-            duration: track.duration,
-            thumbnail: track.thumbnail,
-            author: track.author,
-        };
+        return song;
     }
 
-    async play(message) {
-        const player = this.manager.players.get(message.guild.id);
-        if (!player || !player.queue.current) return false;
+    async playNext(guildId) {
+        const guildData = this.getGuildData(guildId);
+        
+        if (guildData.songs.length === 0) {
+            guildData.isPlaying = false;
+            guildData.currentSong = null;
+            return false;
+        }
 
-        player.play();
-        return true;
+        const song = guildData.songs.shift();
+        return this.playSong(guildId, song);
     }
 
-    async playNext(message) {
-        const player = this.manager.players.get(message.guild.id);
-        if (player) {
-            player.stop(); // Pasa automáticamente a la siguiente
+    async playSong(guildId, song) {
+        try {
+            const player = this.players.get(guildId);
+            if (!player) return false;
+
+            const guildData = this.getGuildData(guildId);
+
+            // Verificar si es contenido en vivo (no soportado por ytdl)
+            if (song.isLive) {
+                throw new Error('Live streams are not supported');
+            }
+
+            const stream = ytdl(song.url, {
+                filter: 'audioonly',
+                highWaterMark: 1 << 25,
+                quality: 'lowestaudio'
+            });
+
+            const resource = createAudioResource(stream, {
+                inlineVolume: true
+            });
+
+            resource.volume?.setVolume(guildData.volume);
+
+            player.play(resource);
+            guildData.currentSong = song;
+            guildData.isPlaying = true;
+            guildData.isPaused = false;
+
+            return true;
+        } catch (error) {
+            console.error('Error reproduciendo canción:', error);
+            // Intentar siguiente canción si hay error
+            this.playNext(guildId);
+            return false;
         }
     }
 
     pause(guildId) {
-        const player = this.manager.players.get(guildId);
-        if (player) player.pause(true);
+        const player = this.players.get(guildId);
+        const guildData = this.getGuildData(guildId);
+        
+        if (player && guildData.isPlaying) {
+            player.pause();
+            guildData.isPaused = true;
+            return true;
+        }
+        return false;
     }
 
     resume(guildId) {
-        const player = this.manager.players.get(guildId);
-        if (player) player.pause(false);
+        const player = this.players.get(guildId);
+        const guildData = this.getGuildData(guildId);
+        
+        if (player && guildData.isPaused) {
+            player.unpause();
+            guildData.isPaused = false;
+            return true;
+        }
+        return false;
     }
 
     stop(guildId) {
-        const player = this.manager.players.get(guildId);
+        const player = this.players.get(guildId);
+        const guildData = this.getGuildData(guildId);
+        
         if (player) {
-            player.queue.clear();
             player.stop();
+            guildData.songs = [];
+            guildData.currentSong = null;
+            guildData.isPlaying = false;
+            guildData.isPaused = false;
+            return true;
         }
+        return false;
     }
 
     skip(guildId) {
-        const player = this.manager.players.get(guildId);
-        if (player) player.stop();
+        const player = this.players.get(guildId);
+        if (player) {
+            player.stop(); // Esto triggerea el evento 'idle' que reproduce la siguiente
+            return true;
+        }
+        return false;
     }
 
     shuffle(guildId) {
-        const player = this.manager.players.get(guildId);
-        if (player) player.queue.shuffle();
+        const guildData = this.getGuildData(guildId);
+        const songs = guildData.songs;
+        
+        for (let i = songs.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [songs[i], songs[j]] = [songs[j], songs[i]];
+        }
+        return true;
+    }
+
+    setLoop(guildId, mode) {
+        const guildData = this.getGuildData(guildId);
+        const validModes = ['none', 'song', 'queue'];
+        
+        if (validModes.includes(mode)) {
+            guildData.loop = mode;
+            return mode;
+        }
+        return guildData.loop;
     }
 
     toggleLoop(guildId) {
-        const player = this.manager.players.get(guildId);
-        if (!player) return this.loop;
-
-        if (this.loop === "none") {
-            this.loop = "track";
-            player.setTrackRepeat(true);
-        } else if (this.loop === "track") {
-            this.loop = "queue";
-            player.setTrackRepeat(false);
-            player.setQueueRepeat(true);
-        } else {
-            this.loop = "none";
-            player.setTrackRepeat(false);
-            player.setQueueRepeat(false);
-        }
-        return this.loop;
+        const guildData = this.getGuildData(guildId);
+        const modes = ['none', 'song', 'queue'];
+        const currentIndex = modes.indexOf(guildData.loop);
+        const nextIndex = (currentIndex + 1) % modes.length;
+        
+        guildData.loop = modes[nextIndex];
+        return guildData.loop;
     }
 
     getQueue(guildId) {
-        const player = this.manager.players.get(guildId);
-        if (!player) return null;
-
+        const guildData = this.getGuildData(guildId);
         return {
-            current: player.queue.current,
-            queue: player.queue,
-            isPlaying: player.playing,
-            loop: this.loop,
+            current: guildData.currentSong,
+            queue: guildData.songs,
+            isPlaying: guildData.isPlaying,
+            isPaused: guildData.isPaused,
+            loop: guildData.loop,
+            volume: guildData.volume
         };
     }
 
     clear(guildId) {
-        const player = this.manager.players.get(guildId);
-        if (player) player.queue.clear();
+        const guildData = this.getGuildData(guildId);
+        guildData.songs = [];
+        return true;
+    }
+
+    leave(guildId) {
+        const connection = this.connections.get(guildId);
+        if (connection) {
+            connection.destroy();
+        }
+        this.cleanup(guildId);
+    }
+
+    cleanup(guildId) {
+        this.connections.delete(guildId);
+        this.players.delete(guildId);
+        this.queues.delete(guildId);
+    }
+
+    setVolume(guildId, volume) {
+        const guildData = this.getGuildData(guildId);
+        volume = Math.max(0, Math.min(1, volume));
+        guildData.volume = volume;
+        
+        const player = this.players.get(guildId);
+        if (player && player.state.resource?.volume) {
+            player.state.resource.volume.setVolume(volume);
+        }
+        return volume;
     }
 }
 
-let musicManager;
-export function initMusicManager(client) {
-    musicManager = new MusicManager(client);
-    musicManager.manager.init(client.user.id);
-    return musicManager;
-}
+// Instancia única
+export const musicManager = new MusicManager();

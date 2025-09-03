@@ -1,6 +1,5 @@
 import { Mistral } from '@mistralai/mistralai';
-import { readFile } from 'fs/promises';
-import { createReadStream } from 'fs';
+import { readFile, writeFile } from 'fs/promises';
 import { loadProductData } from '../data/data-manager.js';
 
 const config = JSON.parse(await readFile(new URL('../config.json', import.meta.url)));
@@ -45,30 +44,32 @@ export async function isRelatedToMineColab(question) {
 }
 
 // Generar respuesta estándar
-export async function generateResponse(userQuestion, learningData, manualData, productData) {
+export async function generateResponse(userQuestion, learningData, manualData, productDataParam = null) {
+    const currentProductData = productDataParam.productData || productData.productData;
+    
     const formattedFAQ = data.map(pair => {
         const questions = Array.isArray(pair.question) ? pair.question : [pair.question];
         return questions.map(q => `Pregunta: ${q}\nRespuesta: ${pair.answer}`).join('\n\n');
     }).join('\n\n');
     
     const formattedData = `
-        Nombre del producto: ${productData.productName}
-        Descripción: ${productData.description}
-        Otros nombres del producto: ${productData['otros nombres'].join(', ')}
+        Nombre del producto: ${currentProductData.productName}
+        Descripción: ${currentProductData.description}
+        Otros nombres del producto: ${currentProductData['otros_nombres'].join(', ')}
 
         Características:
-        ${Object.entries(productData.features).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
+        ${Object.entries(currentProductData.features).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
 
         No soporta:
-        ${Object.entries(productData.no_permite).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
+        ${Object.entries(currentProductData.no_permite).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
 
         Comunidad y soporte:
-        Oficial: ${productData.comunidad.oficial}
+        Oficial: ${currentProductData.comunidad.oficial}
         Otras plataformas:
-        ${Object.entries(productData.comunidad.secundarias).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
+        ${Object.entries(currentProductData.comunidad.secundarias).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
 
         Problemas comunes:
-        ${Object.entries(productData.commonIssues).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
+        ${Object.entries(currentProductData.commonIssues).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
     `.trim();
 
     const prompt = `Eres un asistente experto en MineColab Improved, un servicio que permite ejecutar Minecraft en un entorno de Jupyter Notebook. Está diseñado especialmente para Google Colab, una plataforma gratuita que permite ejecutar Jupyter Notebooks. Responde usando ÚNICAMENTE el siguiente historial de conocimiento y las preguntas-respuestas ya preparadas. SI LA PREGUNTA COINCIDE CON UNO DE LOS DATOS PROPORCIONADOS, UTILÍZALO SIEMPRE, PERO SELECCIONA SOLO LOS DATOS RELEVANTES PARA RESPONDER A LA PREGUNTA DE FORMA DIRECTA. NO INVENTES DATOS.
@@ -100,30 +101,32 @@ Si el mensaje puede contener más información, SUGIERE QUE TE PREGUNTE EL USUAR
 }
 
 // Generar respuesta con contexto (para tickets)
-export async function generateResponseWithContext(userQuestion, learningData, manualData, productData, ticketContext) {
+export async function generateResponseWithContext(userQuestion, learningData, manualData, productDataParam, ticketContext) {
+    const currentProductData = productDataParam.productData || productData.productData;
+    
     const formattedFAQ = data.map(pair => {
         const questions = Array.isArray(pair.question) ? pair.question : [pair.question];
         return questions.map(q => `Pregunta: ${q}\nRespuesta: ${pair.answer}`).join('\n\n');
     }).join('\n\n');
     
     const formattedData = `
-        Nombre del producto: ${productData.productName}
-        Descripción: ${productData.description}
-        Otros nombres del producto: ${productData['otros nombres'].join(', ')}
+        Nombre del producto: ${currentProductData.productName}
+        Descripción: ${currentProductData.description}
+        Otros nombres del producto: ${currentProductData['otros_nombres'].join(', ')}
 
         Características:
-        ${Object.entries(productData.features).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
+        ${Object.entries(currentProductData.features).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
 
         No soporta:
-        ${Object.entries(productData.no_permite).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
+        ${Object.entries(currentProductData.no_permite).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
 
         Comunidad y soporte:
-        Oficial: ${productData.comunidad.oficial}
+        Oficial: ${currentProductData.comunidad.oficial}
         Otras plataformas:
-        ${Object.entries(productData.comunidad.secundarias).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
+        ${Object.entries(currentProductData.comunidad.secundarias).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
 
         Problemas comunes:
-        ${Object.entries(productData.commonIssues).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
+        ${Object.entries(currentProductData.commonIssues).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
     `.trim();
 
     // Formatear contexto del ticket
@@ -152,11 +155,11 @@ Instrucciones:
 6. Sé empático y profesional, es un ticket de soporte
 7. Si el usuario ya proporcionó información en mensajes anteriores, tenla en cuenta
 
-AÑADE SIEMPRE AL FINAL DEL MENSAJE: -# Este mensaje ha sido generado por IA y puede contener información incorrecta o incompleta.
+> Este mensaje ha sido generado por IA y puede contener información incorrecta o incompleta.
 `;
 
     const result = await mistral.chat.complete({
-        model: "mistral-small-latest",
+        model: "mistral-small-2506",
         stream: false,
         messages: [{ role: 'user', content: prompt }]
     });
@@ -164,14 +167,47 @@ AÑADE SIEMPRE AL FINAL DEL MENSAJE: -# Este mensaje ha sido generado por IA y p
     return result.choices[0].message.content;
 }
 
-// Manejar archivos subidos
-export async function uploadFile(filePath) {
-    const fileStream = createReadStream(filePath);
-    const result = await mistral.files.upload({
-        file: fileStream,
-    });
+// UPLOAD DE ARCHIVOS CORREGIDO
+export async function uploadFile(fileData) {
+    try {
+        // Crear un Blob del contenido del archivo
+        const blob = new Blob([fileData.content], { 
+            type: getContentType(fileData.fileName) 
+        });
 
-    return result;
+        // Crear un objeto File-like
+        const file = new File([blob], fileData.fileName, {
+            type: getContentType(fileData.fileName)
+        });
+
+        const result = await mistral.files.upload({
+            file: file
+        });
+
+        return result;
+    } catch (error) {
+        console.error('Error uploading file to Mistral:', error);
+        throw error;
+    }
+}
+
+// Función auxiliar para determinar el tipo de contenido
+function getContentType(fileName) {
+    const ext = fileName.toLowerCase().split('.').pop();
+    const mimeTypes = {
+        'txt': 'text/plain',
+        'json': 'application/json',
+        'log': 'text/plain',
+        'png': 'image/png',
+        'jpg': 'image/jpeg',
+        'jpeg': 'image/jpeg',
+        'gif': 'image/gif',
+        'pdf': 'application/pdf',
+        'doc': 'application/msword',
+        'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    };
+    
+    return mimeTypes[ext] || 'application/octet-stream';
 }
 
 // Función de inicialización

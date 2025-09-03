@@ -95,5 +95,14 @@
     "answer": "Sí. Actualmente MineColab Improved está desarrollado para ser ejecutado mediante Google Colab. Aunque la programación real está basada en un Jupyter Notebook, contiene elementos únicos de Google Colab como comandos mágicos (`!` o `%`), los cuáles únicamente pueden ser utilizados en entornos de Google Colab, o entornos emulados con comandos básicos. ¿Esto que significa? Sencillamente, para nuestros usuarios lo más simple y rápido es utilizar Google Colab, puesto que aporta suficientes recursos a los usuarios para poder ejecutar sus servidores sin problemas y un panel web desde el que poder controlar el servidor.",
     "addedBy": "prozoon700",
     "addedAt": "2025-09-03T11:04:09.354Z"
+  },
+  {
+    "question": [
+      "Me ayudas con un error en MCI?",
+      "¿Alguien me podría ayudar con un error?"
+    ],
+    "answer": "Claro que sí. Dinos que necesitas y trataremos de ayudarte lo antes posible.",
+    "addedBy": "prozoon700",
+    "addedAt": "2025-09-03T14:15:37.440Z"
   }
 ]

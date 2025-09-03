@@ -1,7 +1,7 @@
 import { uploadFile, generateResponse, generateResponseWithContext } from '../utils/mistral.js';
+import fetch from 'node-fetch';
 import { logErrorToFile } from '../logs/logError.js';
 import { addMessageToTicket, getTicketMessages, isTicketChannel } from '../utils/ticketManager.js';
-import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { readFile } from 'fs/promises';
@@ -53,27 +53,26 @@ export async function handleMessageCreate(client, message) {
 
         // Manejo de archivos adjuntos
         if (message.attachments.size > 0) {
-            const file = message.attachments.first();
-            const filePath = path.join(__dirname, '../temp', file.name);
-            
             try {
-                // Crear directorio temp si no existe
-                if (!fs.existsSync(path.dirname(filePath))) {
-                    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+                for (const file of message.attachments.values()) {
+                    // Descargar archivo desde Discord
+                    const res = await fetch(file.url);
+                    const arrayBuffer = await res.arrayBuffer();
+                
+                    // Convertir a Uint8Array
+                    const uint8Content = new Uint8Array(arrayBuffer);
+                
+                    // Subir a Mistral
+                    const result = await uploadFile({
+                        fileName: file.name,
+                        content: uint8Content
+                    });
+                
+                    await message.reply(`📎 Archivo "${file.name}" procesado correctamente. ID: ${result.id}`);
                 }
-                
-                const response = await fetch(file.url);
-                const buffer = await response.arrayBuffer();
-                await fs.promises.writeFile(filePath, Buffer.from(buffer));
-                
-                const result = await uploadFile(filePath);
-                await message.reply(`📎 Archivo procesado correctamente. ID: \`${result.id}\``);
-                
-                // Limpiar archivo temporal
-                fs.unlinkSync(filePath);
             } catch (error) {
-                console.error('Error procesando archivo:', error);
-                await message.reply('❌ Hubo un error procesando el archivo.');
+                console.error('Error procesando archivos:', error);
+                await message.reply('❌ Hubo un error procesando los archivos.');
             }
         }
         // Responder a preguntas o en tickets

@@ -1,13 +1,10 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { readFile } from 'fs/promises';
 import { handleMessageCreate } from './events/messageCreate.js';
-import { handleInteractionCreate, localCommands } from './events/interactionCreate.js';
+import { handleInteractionCreate } from './events/interactionCreate.js';
 import { deployCommands } from './commands/commands-deployer.js';
-import { initMusicManager } from "./utils/musicManager.js";
 
 const config = JSON.parse(await readFile(new URL('./config.json', import.meta.url)));
-
-export let musicManager;
 
 // Manejo de errores no capturados
 process.on('unhandledRejection', (reason, promise) => {
@@ -44,12 +41,16 @@ async function main() {
             console.log(`🤖 Bot iniciado correctamente como ${client.user.tag}!`);
             console.log(`📊 Conectado a ${client.guilds.cache.size} servidor(es)`);
             console.log(`🔧 Autoresponder: ${config.autoResponder ? 'ACTIVADO' : 'DESACTIVADO'}`);
+            console.log(`🎵 Sistema de música inicializado correctamente`);
             
-            musicManager = initMusicManager(client);
-            console.log("🎵 MusicManager inicializado");
-
             // Establecer estado del bot
-            client.user.setActivity('MineColab Improved | !help', { type: 'PLAYING' });
+            client.user.setPresence({
+                activities: [{
+                    name: 'MineColab Improved | /music play',
+                    type: 0 // PLAYING
+                }],
+                status: 'online'
+            });
         });
 
         client.on('messageCreate', (message) => {
