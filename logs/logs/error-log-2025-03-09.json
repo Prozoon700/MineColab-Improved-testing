@@ -1,0 +1,29 @@
+[
+  {
+    "timestamp": "2025-03-09T17:13:57.817Z",
+    "userId": "762281328733192223",
+    "messageContent": "Minekube?",
+    "reason": "Cannot convert undefined or null to object",
+    "details": "TypeError: Cannot convert undefined or null to object\n    at Function.entries (<anonymous>)\n    at generateResponse (file:///home/container/utils/mistral.js:65:10)\n    at generateResponseWithTimeout (file:///home/container/events/messageCreate.js:78:13)\n    at handleMessageCreate (file:///home/container/events/messageCreate.js:54:37)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)",
+    "aiResponse": null,
+    "finalReply": "❌ There was a problem generating the response. Please try again in a few seconds... If the problem persists, please contact an administrator."
+  },
+  {
+    "timestamp": "2025-03-09T17:16:03.419Z",
+    "userId": "762281328733192223",
+    "messageContent": "Minekube?",
+    "reason": "Cannot read properties of undefined (reading 'secundarias')",
+    "details": "TypeError: Cannot read properties of undefined (reading 'secundarias')\n    at generateResponse (file:///home/container/utils/mistral.js:73:50)\n    at generateResponseWithTimeout (file:///home/container/events/messageCreate.js:78:13)\n    at handleMessageCreate (file:///home/container/events/messageCreate.js:54:37)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)",
+    "aiResponse": null,
+    "finalReply": "❌ There was a problem generating the response. Please try again in a few seconds... If the problem persists, please contact an administrator."
+  },
+  {
+    "timestamp": "2025-03-09T17:19:56.232Z",
+    "userId": "762281328733192223",
+    "messageContent": "Minekube?",
+    "reason": "Cannot read properties of undefined (reading 'secundarias')",
+    "details": "TypeError: Cannot read properties of undefined (reading 'secundarias')\n    at generateResponse (file:///home/container/utils/mistral.js:73:50)\n    at generateResponseWithTimeout (file:///home/container/events/messageCreate.js:78:13)\n    at handleMessageCreate (file:///home/container/events/messageCreate.js:54:37)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)",
+    "aiResponse": null,
+    "finalReply": "❌ There was a problem generating the response. Please try again in a few seconds... If the problem persists, please contact an administrator."
+  }
+]

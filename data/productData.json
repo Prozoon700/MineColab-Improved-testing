@@ -1,0 +1,34 @@
+{
+  "productData": {
+    "productName": "MineColab Improved",
+    "description": "MineColab Improved es un cuaderno de Jupyter (Jupyter Notebook) desarrollado para ser usado en Google Colab (entorno de ejecución de Jupter Notebooks con planes gratuitos y que dura hasta 12 horas) y que permite la ejecución de servidores de Minecraft de forma simple, pero completa. Permite a los usuarios crear servidores con hasta 12 GB de RAM disponibles y un almacenamiento de 15 GB o más dependiendo de la cantidad que tengan adquirida en Drive. Esto permite poder ejecutar servidores de Minecraft sin necesidad de abrir puertos en tu ordenador, ni tener un computador encendido siempre.",
+    "otros nombres": [
+      "MCI",
+      "MineColab (Improved)",
+      "Minecolab I"
+    ],
+    "features": {
+      "creación rápida de servidores": "Permite crear SERVIDORES de Minecraft en unos minutos.",
+      "panel intuitivo": "Aunque siempre tratamos de mejorar nuestro interfaz de usuario, creemos que es bastante atractiva y simple de usar para todos los usuarios.",
+      "soporte para la mayoría de versiones": "Puedes usar MineColab Improved con casi todas las versiones de Minecraft, incluyendo algunas snapshots y las más recientes.",
+      "soporte para mods y plugins": "Puedes usar MineColab Improved con mods y plugins de todo tipo haciendo uso de softwares como Fabric, Forge, Paper, o Purpur. Además puedes instalar modpacks.",
+      "modpacks compatibles": "Aunque dependerá de tu modpack, la mayoría de ellos puedes instalarse desde el propio panel sin necesidad de gestionar archivo ni medio. Únicamente busca o sube tu modpack y MCI se encargará de extraerlo e instalarlo por ti."
+    },
+    "no_permite": {
+      "jugar a Minecraft desde el navegador": "Esta proyecto permite ejecutar servidores de Minecraft en Google Colab. Pero no podrás jugar Miencraft desde el navegador"
+    },
+    "comunidad": {
+      "description": "La comunidad está extendida en diferentes plataformas. Las mejores son las oficiales, pero también existen algunas secundarias que aportan valor.",
+      "oficial": "https://discord.gg/XRFWV9EREu (servidior oficial de Discord), https://minecolabimproved.wiki.gg (la wiki oficial)",
+      "secundarias": {
+        "Prozoon700": "https://www.youtube.com/@Prozoon700/videos (uno de los muchos desarrolladores que sube en algunas ocasiones contenido relacionado con MCI)",
+        "Astral": "https://youtu.be/E2AUpOdbtu8 (un YouTuber que subió un vídeo relacionado con MCI)",
+        "FilJam Gaming": "https://youtu.be/URQNa5K-pP8 (un YouTuber inglés que subió un vídeo relacionado con MCI)"
+      }
+    },
+    "commonIssues": {
+      "error de java": "Asegúrate de tener Java instalado correctamente. Utiliza la celda inicial para instalarlo.",
+      "¿Podrías ayudarme a solucionar un problema con los mods de mi servidor?": "Lo siento, pero el soporte de MineColab Improved seguramente no pueda brindarte la ayuda que necesitas ya que nos centramos en los problemas que afectan directamente a MCI y no derivados de problemas de compatibilidad con Mods u otros recursos que no son predeterminados. Aún así puedes revisar que todos los archivos estén actualizados correctamente y que los Mods están diseñados para la versión que estás usando. Además puedes probar a hacer un servidor en local para comprobar que todo funcione en un servidor \"normal\" y en tal caso intentar encontrar el error que lo está causando en tu cuaderno de MineColab Improved. Estaremos encantados de ayudarte a mejorar la compatibilidad con recursos de terceros, pero primero intenta llegar al punto crítico del problema y por qué es causado."
+    }
+  }
+}

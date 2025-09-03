@@ -1,0 +1,20 @@
+{
+  "token": "TU_BOT_TOKEN_AQUI",
+  "apiKey": "TU_MISTRAL_API_KEY_AQUI",
+  "clientId": "TU_CLIENT_ID_AQUI",
+  "guildId": "TU_GUILD_ID_AQUI",
+  "adminRoles": [
+    "Administrador",
+    "Moderador",
+    "MCI Dev"
+  ],
+  "learningChannel": "ID_CANAL_APRENDIZAJE",
+  "enabledChannels": [
+    "ID_CANAL_HABILITADO"
+  ],
+  "autoResponder": false,
+  "testing": false,
+  "testingChannel": "ID_CANAL_TESTING",
+  "ticketCategoryId": "ID_CATEGORIA_TICKETS",
+  "voiceChannelId": "ID_CANAL_VOZ_MUSICA"
+}
