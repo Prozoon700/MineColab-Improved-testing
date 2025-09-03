@@ -1,6 +1,6 @@
 #!/bin/bash
 # Arranca Lavalink en segundo plano
-java -jar Lavalink.jar > lavalink.log 2>&1 &
+java -jar ./music/Lavalink.jar > lavalink.log 2>&1 &
 
 # Espera unos segundos a que Lavalink arranque
 sleep 5
