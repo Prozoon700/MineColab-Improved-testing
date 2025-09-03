@@ -5,7 +5,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { readFile } from 'fs/promises';
-import { loadProductData } from '../data-manager.js';
+import { loadProductData } from '../data/data-manager.js';
 import { getAutoResponder } from '../utils/configManager.js';
 import { franc } from 'franc';
 
