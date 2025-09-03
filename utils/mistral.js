@@ -152,7 +152,7 @@ Instrucciones:
 6. Sé empático y profesional, es un ticket de soporte
 7. Si el usuario ya proporcionó información en mensajes anteriores, tenla en cuenta
 
-> Este mensaje ha sido generado por IA y puede contener información incorrecta o incompleta.
+AÑADE SIEMPRE AL FINAL DEL MENSAJE: -# Este mensaje ha sido generado por IA y puede contener información incorrecta o incompleta.
 `;
 
     const result = await mistral.chat.complete({
