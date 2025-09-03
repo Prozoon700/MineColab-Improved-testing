@@ -1,8 +1,10 @@
 server:
-  port: 2333
+  port: 8081  # puerto web
 
 lavalink:
   server:
+    port: 2334          # puerto de audio
+    bindAddress: 0.0.0.0
     password: "!68b826eb#ww1"
     sources:
       youtube: true
@@ -12,3 +14,4 @@ lavalink:
       vimeo: true
       http: true
       local: false
+    bufferDurationMs: 400
