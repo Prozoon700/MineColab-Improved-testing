@@ -44,7 +44,7 @@ export async function logErrorToFile(errorData) {
         
         // También loggear en consola para debugging
         console.error('Error details:', {
-            reason: errorData.reason,
+            //reason: errorData.reason,
             userId: errorData.userId,
             messageContent: errorData.messageContent?.substring(0, 100) + '...'
         });

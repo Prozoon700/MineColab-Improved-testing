@@ -25,9 +25,6 @@ if (fs.existsSync(cookiesFile)) {
     console.error("❌ Archivo de cookies no encontrado");
 }
 
-const stream = await play.stream('https://www.youtube.com/watch?v=A_g3lMcWVy0', { discordPlayerCompatibility: true });
-console.log(stream);
-
 class MusicManager {
     constructor() {
         this.queues = new Map();

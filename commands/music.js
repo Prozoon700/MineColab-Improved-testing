@@ -70,47 +70,52 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction) {
     const subcommand = interaction.options.getSubcommand();
 
-    switch (subcommand) {
-        case 'play':
-            await handlePlay(interaction);
-            break;
-        case 'pause':
-            await handlePause(interaction);
-            break;
-        case 'resume':
-            await handleResume(interaction);
-            break;
-        case 'stop':
-            await handleStop(interaction);
-            break;
-        case 'skip':
-            await handleSkip(interaction);
-            break;
-        case 'queue':
-            await handleQueue(interaction);
-            break;
-        case 'shuffle':
-            await handleShuffle(interaction);
-            break;
-        case 'loop':
-            await handleLoop(interaction);
-            break;
-        case 'volume':
-            await handleVolume(interaction);
-            break;
-        case 'nowplaying':
-            await handleNowPlaying(interaction);
-            break;
-        case 'clear':
-            await handleClear(interaction);
-            break;
-        case 'leave':
-            await handleLeave(interaction);
-            break;
-        case 'reset':
-            await handleReset(interaction);
-            break;
-    }
+    //switch (subcommand) {
+    //    case 'play':
+    //        await handlePlay(interaction);
+    //        break;
+    //    case 'pause':
+    //        await handlePause(interaction);
+    //        break;
+    //    case 'resume':
+    //        await handleResume(interaction);
+    //        break;
+    //    case 'stop':
+    //        await handleStop(interaction);
+    //        break;
+    //    case 'skip':
+    //        await handleSkip(interaction);
+    //        break;
+    //    case 'queue':
+    //        await handleQueue(interaction);
+    //        break;
+    //    case 'shuffle':
+    //        await handleShuffle(interaction);
+    //        break;
+    //    case 'loop':
+    //        await handleLoop(interaction);
+    //        break;
+    //    case 'volume':
+    //        await handleVolume(interaction);
+    //        break;
+    //    case 'nowplaying':
+    //        await handleNowPlaying(interaction);
+    //        break;
+    //    case 'clear':
+    //        await handleClear(interaction);
+    //        break;
+    //    case 'leave':
+    //        await handleLeave(interaction);
+    //        break;
+    //    case 'reset':
+    //        await handleReset(interaction);
+    //        break;
+    //}
+
+    return interaction.reply({
+        content: "Sorry, this feature is under development. State up to date to know when I am able to play music for you!",
+        ephemeral: true
+    })
 }
 
 /* ---------------- FUNCIONES ---------------- */

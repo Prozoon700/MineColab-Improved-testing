@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-09-04T11:23:44.266Z",
+  "error": {
+    "date": "2025-09-04T11:23:44.266Z",
+    "reason": "Cannot read properties of undefined (reading 'length')",
+    "details": "TypeError: Cannot read properties of undefined (reading 'length')\n    at dividirMensaje (file:///workspaces/MineColab-Improved-testing/events/messageCreate.js:169:20)\n    at editarMensajeLargo (file:///workspaces/MineColab-Improved-testing/events/messageCreate.js:190:20)\n    at handleMessageCreate (file:///workspaces/MineColab-Improved-testing/events/messageCreate.js:119:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"
+  },
+  "context": {
+    "messageContent": "?",
+    "userId": "762281328733192223",
+    "channelId": "1327966840013455390",
+    "isTicket": false
+  },
+  "response": {
+    "finalReply": "❌ There was a problem generating the response. Please try again in a few seconds... If the problem persists, please contact an administrator."
+  }
+}
