@@ -68,6 +68,7 @@ export async function handleMessageCreate(client, message) {
                         image_url.push(file.url);
                     
                         //await message.reply(`📎 Archivo "${file.name}" procesado correctamente.`);
+                        console.log(`📎 Archivo "${file.name}" procesado correctamente.`);
                     }
                 } catch (error) {
                     console.error('Error procesando archivos:', error);
@@ -99,6 +100,7 @@ export async function handleMessageCreate(client, message) {
                         message.content, 
                         [], 
                         manualData, 
+                        productData, // Fix: pass productData correctly
                         ticketMessages,
                         image_url
                     );
@@ -108,6 +110,8 @@ export async function handleMessageCreate(client, message) {
                         message.content, 
                         [], 
                         manualData,
+                        productData, // Fix: pass productData correctly
+                        null, // No ticket context
                         image_url
                     );
                 }
@@ -145,12 +149,12 @@ export async function handleMessageCreate(client, message) {
         }
     }
     
-    // Función con timeout para generar respuesta
-    async function generateResponseWithTimeout(question, learningData, manualData, ticketContext = null, timeoutMs = 15000) {
+    // Función con timeout para generar respuesta - FIXED
+    async function generateResponseWithTimeout(question, learningData, manualData, productData, ticketContext = null, image_url = [], timeoutMs = 15000) {
         return Promise.race([
-            ticketContext.includes(message.channel.id) ? 
-                generateResponseWithContext(question, learningData, manualData, productData, ticketContext) :
-                generateResponse(question, learningData, manualData, productData),
+            ticketContext ? 
+                generateResponseWithContext(question, learningData, manualData, productData, ticketContext, image_url) :
+                generateResponse(question, learningData, manualData, productData, image_url),
             new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Timeout generando la respuesta...')), timeoutMs)
             )

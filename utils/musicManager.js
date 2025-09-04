@@ -8,14 +8,17 @@ import {
 } from '@discordjs/voice';
 import ytdl from '@distube/ytdl-core';
 import yts from 'yt-search';
+import youtubeSr from 'youtube-sr';
 
 console.log(generateDependencyReport());
 
 class MusicManager {
     constructor() {
-        this.queues = new Map(); // Una cola por guild
+        this.queues = new Map();
         this.connections = new Map();
         this.players = new Map();
+        this.retryAttempts = 2; // Reducido para evitar spam
+        this.useAlternativeSearch = false; // Flag para usar búsqueda alternativa
     }
 
     getGuildData(guildId) {
@@ -23,7 +26,7 @@ class MusicManager {
             this.queues.set(guildId, {
                 songs: [],
                 currentSong: null,
-                loop: 'none', // 'none', 'song', 'queue'
+                loop: 'none',
                 volume: 0.5,
                 isPlaying: false,
                 isPaused: false
@@ -39,8 +42,8 @@ class MusicManager {
             return this.connections.get(guildId);
         }
 
-        if (!member.voice.channel || !member.voice.channel.joinable) {
-            return interaction.reply({ content: 'No puedo unirme a tu canal de voz.', ephemeral: true });
+        if (!channel || !channel.joinable) {
+            throw new Error('No puedo unirme a tu canal de voz.');
         }
 
         const connection = joinVoiceChannel({
@@ -50,7 +53,6 @@ class MusicManager {
         });
 
         const player = createAudioPlayer();
-        
         connection.subscribe(player);
         
         this.connections.set(guildId, connection);
@@ -81,22 +83,20 @@ class MusicManager {
         const guildData = this.getGuildData(guildId);
         
         if (guildData.loop === 'song' && guildData.currentSong) {
-            // Repetir la canción actual
             this.playSong(guildId, guildData.currentSong);
         } else if (guildData.loop === 'queue' && guildData.currentSong) {
-            // Añadir la canción actual al final de la cola
             guildData.songs.push(guildData.currentSong);
             this.playNext(guildId);
         } else {
-            // Reproducir siguiente canción
             this.playNext(guildId);
         }
     }
 
+    // Método de búsqueda principal con fallbacks integrados
     async search(query) {
-        try {
-            // Si es una URL de YouTube
-            if (ytdl.validateURL(query)) {
+        // Método 1: Intentar con ytdl si es URL válida
+        if (ytdl.validateURL(query)) {
+            try {
                 const info = await ytdl.getInfo(query);
                 return {
                     title: info.videoDetails.title,
@@ -104,27 +104,55 @@ class MusicManager {
                     duration: parseInt(info.videoDetails.lengthSeconds),
                     thumbnail: info.videoDetails.thumbnails[0]?.url,
                     author: info.videoDetails.author.name,
-                    isLive: info.videoDetails.isLiveContent
+                    isLive: info.videoDetails.isLiveContent,
+                    source: 'ytdl-url'
+                };
+            } catch (ytdlError) {
+                console.warn('ytdl failed for URL, trying alternative methods');
+                this.useAlternativeSearch = true;
+            }
+        }
+
+        // Método 2: youtube-sr (más confiable actualmente)
+        try {
+            const results = await youtubeSr.search(query, { type: 'video', limit: 1 });
+            
+            if (results && results.length > 0) {
+                const video = results[0];
+                return {
+                    title: video.title,
+                    url: video.url,
+                    duration: Math.floor(video.duration / 1000),
+                    thumbnail: video.thumbnail?.displayThumbnailURL() || video.thumbnail?.url,
+                    author: video.channel?.name || 'Unknown',
+                    isLive: video.live || false,
+                    source: 'youtube-sr'
                 };
             }
-
-            // Buscar en YouTube
-            const results = await yts(query);
-            if (!results.videos.length) return null;
-
-            const video = results.videos[0];
-            return {
-                title: video.title,
-                url: video.url,
-                duration: video.duration.seconds,
-                thumbnail: video.thumbnail,
-                author: video.author.name,
-                isLive: false
-            };
-        } catch (error) {
-            console.error('Error en búsqueda:', error);
-            return null;
+        } catch (srError) {
+            console.warn('youtube-sr failed, trying yt-search:', srError.message);
         }
+
+        // Método 3: yt-search como último recurso
+        try {
+            const results = await yts(query);
+            if (results.videos && results.videos.length > 0) {
+                const video = results.videos[0];
+                return {
+                    title: video.title,
+                    url: video.url,
+                    duration: video.duration.seconds,
+                    thumbnail: video.thumbnail,
+                    author: video.author.name,
+                    isLive: false,
+                    source: 'yt-search'
+                };
+            }
+        } catch (ytsError) {
+            console.error('All search methods failed:', ytsError);
+        }
+
+        return null;
     }
 
     async add(query, guildId) {
@@ -134,7 +162,6 @@ class MusicManager {
         const guildData = this.getGuildData(guildId);
         guildData.songs.push(song);
 
-        // Si no hay música reproduciéndose, empezar a reproducir
         if (!guildData.isPlaying) {
             this.playNext(guildId);
         }
@@ -155,24 +182,66 @@ class MusicManager {
         return this.playSong(guildId, song);
     }
 
-    async playSong(guildId, song) {
+    async playSong(guildId, song, attempt = 1) {
         try {
             const player = this.players.get(guildId);
             if (!player) return false;
 
             const guildData = this.getGuildData(guildId);
 
-            // Verificar si es contenido en vivo (no soportado por ytdl)
             if (song.isLive) {
-                throw new Error('Live streams are not supported');
+                console.warn('Skipping live stream:', song.title);
+                this.playNext(guildId);
+                return false;
             }
 
+            // Intentar crear el stream con manejo robusto de errores
             let stream;
-            try {
-                stream = ytdl(song.url, { filter: 'audioonly', highWaterMark: 1<<25, quality: 'lowestaudio' });
-            } catch (err) {
-                console.error('Error creando stream:', err);
-                return false;
+            let streamCreated = false;
+
+            // Si ytdl ha fallado antes, usar método alternativo directamente
+            if (this.useAlternativeSearch && song.source !== 'ytdl-url') {
+                console.log('Using alternative stream method due to previous ytdl failures');
+                throw new Error('Skipping ytdl due to previous failures');
+            }
+
+            // Intentar diferentes configuraciones de ytdl
+            const ytdlOptions = [
+                { 
+                    filter: 'audioonly', 
+                    quality: 'lowestaudio',
+                    requestOptions: {
+                        headers: {
+                            cookie: process.env.YT_COOKIE,
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                        }
+                    }
+                },
+                { 
+                    filter: 'audioonly',
+                    requestOptions: {
+                        headers: {
+                            cookie: process.env.YT_COOKIE,
+                            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+                        }
+                    }
+                }
+            ];
+
+            for (const options of ytdlOptions) {
+                try {
+                    stream = ytdl(song.url, options);
+                    streamCreated = true;
+                    console.log(`Stream created successfully for: ${song.title}`);
+                    break;
+                } catch (error) {
+                    console.warn(`ytdl option failed:`, error.message);
+                    continue;
+                }
+            }
+
+            if (!streamCreated) {
+                throw new Error('Could not create ytdl stream with any configuration');
             }
 
             const resource = createAudioResource(stream, {
@@ -181,16 +250,48 @@ class MusicManager {
 
             resource.volume?.setVolume(guildData.volume);
 
+            // Manejar errores del stream ANTES de reproducir
+            stream.on('error', (error) => {
+                console.error('Stream error occurred:', error.message);
+                
+                // Si es el error de "Sign in to confirm you're not a bot", marcar para usar alternativas
+                if (error.message.includes('Sign in to confirm')) {
+                    this.useAlternativeSearch = true;
+                    console.log('YouTube bot detection triggered, switching to alternative methods');
+                }
+                
+                // Saltar a la siguiente canción inmediatamente
+                setTimeout(() => {
+                    console.log('Skipping to next song due to stream error');
+                    this.playNext(guildId);
+                }, 1000);
+            });
+
             player.play(resource);
             guildData.currentSong = song;
             guildData.isPlaying = true;
             guildData.isPaused = false;
 
             return true;
+
         } catch (error) {
-            console.error('Error reproduciendo canción:', error);
-            // Intentar siguiente canción si hay error
-            this.playNext(guildId);
+            console.error(`Error playing song (attempt ${attempt}):`, error.message);
+            
+            // Si es error de bot detection, marcar flag
+            if (error.message.includes('Sign in to confirm') || error.message.includes('bot')) {
+                this.useAlternativeSearch = true;
+            }
+            
+            if (attempt <= this.retryAttempts && !error.message.includes('Sign in to confirm')) {
+                console.log(`Retrying song (${attempt}/${this.retryAttempts}): ${song.title}`);
+                await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                return this.playSong(guildId, song, attempt + 1);
+            }
+            
+            console.log(`Skipping song after ${attempt} attempts: ${song.title}`);
+            
+            // Intentar siguiente canción
+            setTimeout(() => this.playNext(guildId), 500);
             return false;
         }
     }
@@ -199,7 +300,7 @@ class MusicManager {
         const player = this.players.get(guildId);
         const guildData = this.getGuildData(guildId);
         
-        if (player && guildData.isPlaying) {
+        if (player && guildData.isPlaying && !guildData.isPaused) {
             player.pause();
             guildData.isPaused = true;
             return true;
@@ -237,7 +338,7 @@ class MusicManager {
     skip(guildId) {
         const player = this.players.get(guildId);
         if (player) {
-            player.stop(); // Esto triggerea el evento 'idle' que reproduce la siguiente
+            player.stop();
             return true;
         }
         return false;
@@ -283,7 +384,8 @@ class MusicManager {
             isPlaying: guildData.isPlaying,
             isPaused: guildData.isPaused,
             loop: guildData.loop,
-            volume: guildData.volume
+            volume: guildData.volume,
+            usingAlternativeSearch: this.useAlternativeSearch
         };
     }
 
@@ -318,7 +420,12 @@ class MusicManager {
         }
         return volume;
     }
+
+    // Método para resetear el flag de búsqueda alternativa
+    resetAlternativeSearch() {
+        this.useAlternativeSearch = false;
+        console.log('Reset alternative search flag - will try ytdl again');
+    }
 }
 
-// Instancia única
 export const musicManager = new MusicManager();
