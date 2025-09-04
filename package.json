@@ -9,21 +9,30 @@
   },
   "dependencies": {
     "@discordjs/voice": "^0.18.0",
-    "@distube/ytdl-core": "^4.13.5",
+    "@distube/ytdl-core": "^4.16.12",
     "@mistralai/mistralai": "^1.5.0",
     "assert": "^2.1.0",
     "axios": "^1.8.1",
     "cheerio": "^1.0.0",
     "deepseek": "^0.0.2",
-    "discord.js": "^14.18.0",
+    "discord.js": "^14.22.1",
     "dotenv": "^16.4.7",
     "ffmpeg-static": "^5.2.0",
     "franc": "^6.2.0",
     "fs": "^0.0.1-security",
+    "node-fetch": "^3.3.2",
     "openai": "^4.86.1",
+    "opusscript": "^0.0.8",
     "play-dl": "^1.9.7",
     "simple-statistics": "^7.8.7",
+    "sodium-native": "^5.0.8",
     "typescript": "^5.7.3",
-    "yt-search": "^2.12.1"
+    "youtube-dl-exec": "^3.0.24",
+    "youtube-sr": "^4.3.12",
+    "yt-search": "^2.13.1",
+    "ytsr": "^3.8.4"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

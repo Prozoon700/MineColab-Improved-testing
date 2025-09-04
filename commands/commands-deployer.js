@@ -24,7 +24,7 @@ export async function deployCommands(clientId, token) {
         console.log(`Actualizando ${commands.length} comandos de aplicación.`);
 
         await rest.put(
-            Routes.applicationCommands(clientId),
+            Routes.applicationGuildCommands(clientId, "1221553793355878422"), // applicationCommands(clientId) -- para bot final
             { body: commands }
         );
 

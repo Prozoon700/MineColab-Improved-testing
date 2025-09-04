@@ -1,10 +1,11 @@
-import { uploadFile, generateResponse, generateResponseWithContext } from '../utils/mistral.js';
+import { generateResponse, generateResponseWithContext } from '../utils/mistral.js';
+import fetch from 'node-fetch';
 import { logErrorToFile } from '../logs/logError.js';
 import { addMessageToTicket, getTicketMessages, isTicketChannel } from '../utils/ticketManager.js';
-import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { readFile } from 'fs/promises';
+import { loadProductData } from '../data/data-manager.js';
 import { getAutoResponder } from '../utils/configManager.js';
 import { franc } from 'franc';
 
@@ -15,7 +16,9 @@ export async function handleMessageCreate(client, message) {
     if (message.author.bot) return;
     
     const config = JSON.parse(await readFile(new URL('../config.json', import.meta.url)));
-    const manualData = JSON.parse(await readFile(new URL('../data/data.json', import.meta.url)));
+    const { productData, data: manualData } = await loadProductData();
+
+    var image_url = [];
 
     // Verificar si es un canal de ticket
     const isTicket = isTicketChannel(message.channel.id, config) || 
@@ -38,6 +41,10 @@ export async function handleMessageCreate(client, message) {
         }
     }
 
+    if (config.excludedChannels.includes(message.channel.id)) {
+        return;
+    }
+
     // Sistema de autorespuesta
     if (getAutoResponder()) {
         // Verificar canal de testing si está en modo testing
@@ -50,33 +57,25 @@ export async function handleMessageCreate(client, message) {
             return;
         }
 
-        // Manejo de archivos adjuntos
-        if (message.attachments.size > 0) {
-            const file = message.attachments.first();
-            const filePath = path.join(__dirname, '../temp', file.name);
-            
-            try {
-                // Crear directorio temp si no existe
-                if (!fs.existsSync(path.dirname(filePath))) {
-                    fs.mkdirSync(path.dirname(filePath), { recursive: true });
-                }
-                
-                const response = await fetch(file.url);
-                const buffer = await response.arrayBuffer();
-                await fs.promises.writeFile(filePath, Buffer.from(buffer));
-                
-                const result = await uploadFile(filePath);
-                await message.reply(`📎 Archivo procesado correctamente. ID: \`${result.id}\``);
-                
-                // Limpiar archivo temporal
-                fs.unlinkSync(filePath);
-            } catch (error) {
-                console.error('Error procesando archivo:', error);
-                await message.reply('❌ Hubo un error procesando el archivo.');
-            }
-        }
         // Responder a preguntas o en tickets
-        else if (message.content.trim().endsWith('?') || isTicket) {
+        else if (message.content.includes('?') || message.content.includes('.mi') || message.content.includes('@1344790741469364416') || isTicket) {
+            // Manejo de archivos adjuntos
+            if (message.attachments.size > 0) {
+                try {
+                    image_url = [];
+                
+                    for (const file of message.attachments.values()) {
+                        image_url.push(file.url);
+                    
+                        //await message.reply(`📎 Archivo "${file.name}" procesado correctamente.`);
+                        console.log(`📎 Archivo "${file.name}" procesado correctamente.`);
+                    }
+                } catch (error) {
+                    console.error('Error procesando archivos:', error);
+                    await message.reply('❌ Hubo un error procesando los archivos.');
+                }
+            }
+            
             const detectedLang = franc(message.content);
             console.log("Idioma detectado:", detectedLang);
             
@@ -101,14 +100,19 @@ export async function handleMessageCreate(client, message) {
                         message.content, 
                         [], 
                         manualData, 
-                        ticketMessages
+                        productData, // Fix: pass productData correctly
+                        ticketMessages,
+                        image_url
                     );
                 } else {
                     // Para canales normales, usar lógica estándar
                     aiResponse = await generateResponseWithTimeout(
                         message.content, 
                         [], 
-                        manualData
+                        manualData,
+                        productData, // Fix: pass productData correctly
+                        null, // No ticket context
+                        image_url
                     );
                 }
                 
@@ -145,12 +149,12 @@ export async function handleMessageCreate(client, message) {
         }
     }
     
-    // Función con timeout para generar respuesta
-    async function generateResponseWithTimeout(question, learningData, manualData, ticketContext = null, timeoutMs = 15000) {
+    // Función con timeout para generar respuesta - FIXED
+    async function generateResponseWithTimeout(question, learningData, manualData, productData, ticketContext = null, image_url = [], timeoutMs = 15000) {
         return Promise.race([
             ticketContext ? 
-                generateResponseWithContext(question, learningData, manualData, ticketContext) :
-                generateResponse(question, learningData, manualData),
+                generateResponseWithContext(question, learningData, manualData, productData, ticketContext, image_url) :
+                generateResponse(question, learningData, manualData, productData, image_url),
             new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Timeout generando la respuesta...')), timeoutMs)
             )

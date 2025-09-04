@@ -41,9 +41,16 @@ async function main() {
             console.log(`🤖 Bot iniciado correctamente como ${client.user.tag}!`);
             console.log(`📊 Conectado a ${client.guilds.cache.size} servidor(es)`);
             console.log(`🔧 Autoresponder: ${config.autoResponder ? 'ACTIVADO' : 'DESACTIVADO'}`);
+            console.log(`🎵 Sistema de música inicializado correctamente`);
             
             // Establecer estado del bot
-            client.user.setActivity('MineColab Improved | !help', { type: 'PLAYING' });
+            client.user.setPresence({
+                activities: [{
+                    name: 'MineColab Improved | /music play',
+                    type: 0 // PLAYING
+                }],
+                status: 'online'
+            });
         });
 
         client.on('messageCreate', (message) => {

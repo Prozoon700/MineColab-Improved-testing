@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-09-04T11:22:41.821Z",
+  "error": {
+    "date": "2025-09-04T11:22:41.821Z",
+    "reason": "result is not defined",
+    "details": "ReferenceError: result is not defined\n    at generateResponse (file:///workspaces/MineColab-Improved-testing/utils/mistral.js:159:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async handleMessageCreate (file:///workspaces/MineColab-Improved-testing/events/messageCreate.js:109:34)"
+  },
+  "context": {
+    "messageContent": "?",
+    "userId": "762281328733192223",
+    "channelId": "1327966840013455390",
+    "isTicket": false
+  },
+  "response": {
+    "aiResponse": null,
+    "finalReply": "❌ There was a problem generating the response. Please try again in a few seconds... If the problem persists, please contact an administrator."
+  }
+}

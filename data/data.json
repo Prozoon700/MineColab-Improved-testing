@@ -95,5 +95,39 @@
     "answer": "Sí. Actualmente MineColab Improved está desarrollado para ser ejecutado mediante Google Colab. Aunque la programación real está basada en un Jupyter Notebook, contiene elementos únicos de Google Colab como comandos mágicos (`!` o `%`), los cuáles únicamente pueden ser utilizados en entornos de Google Colab, o entornos emulados con comandos básicos. ¿Esto que significa? Sencillamente, para nuestros usuarios lo más simple y rápido es utilizar Google Colab, puesto que aporta suficientes recursos a los usuarios para poder ejecutar sus servidores sin problemas y un panel web desde el que poder controlar el servidor.",
     "addedBy": "prozoon700",
     "addedAt": "2025-09-03T11:04:09.354Z"
+  },
+  {
+    "question": [
+      "Me ayudas con un error en MCI?",
+      "¿Alguien me podría ayudar con un error?"
+    ],
+    "answer": "Claro que sí. Dinos que necesitas y trataremos de ayudarte lo antes posible.",
+    "addedBy": "prozoon700",
+    "addedAt": "2025-09-03T14:15:37.440Z"
+  },
+  {
+    "question": [
+      "¿Puedes leer archivos?",
+      "¿Puedes analizar archivos?"
+    ],
+    "answer": "Yo, como bot de soporte a los usuarios sí soy capaz de leer archivos de logs, e incluso puedo analizar imágenes.",
+    "addedBy": "prozoon700",
+    "addedAt": "2025-09-03T15:01:52.130Z"
+  },
+  {
+    "question": [
+      "que es minecolab?"
+    ],
+    "answer": "## ¿Qué es MineColab Improved?  MineColab Improved es una herramienta que te permite crear y ejecutar un servidor de Minecraft directamente desde tu Google Drive, utilizando Google Colab, un entorno gratuito basado en Jupyter Notebook y Ubuntu.  MineColab Improved se enfoca en tres aspectos clave:  - **Facilidad de uso**: Está diseñado para ser fácil de configurar, sin necesidad de conocimientos avanzados sobre servidores. - **Estabilidad**: Ofrece una experiencia estable al ejecutar el servidor en la nube, sin depender de tu hardware local. - **Accesibilidad**: Al usar Google Colab y Drive, no es necesario pagar por alojamiento ni mantener tu computadora encendida para ejecutar el servidor.",
+    "addedBy": "hellowordmed",
+    "addedAt": "2025-09-03T16:10:16.116Z"
+  },
+  {
+    "question": [
+      "¿Cómo puedo solucionar este error? Python error, buffer interface, bytes-like object not supported -- https://media.discordapp.net/attachments/1327966840013455390/1413128865353695242/image.png?ex=68bace50&is=68b97cd0&hm=4b654120c02a81c5ff5c3867f68864bd4f50648e8f4fc1a54584a91527364842&=&format=webp&quality=lossless&width=973&height=548"
+    ],
+    "answer": "Errores relacionados con python y su método de ejecucion suelen ser fáciles de arreglar. Simplemente asegúrate de que tu cuaderno está guardado correctamente, para ello comprueba Google Drive, y después reinicia el entorno de ejecución del cuaderno de Google Colab como se muestra en el siguiente GIF. https://media.discordapp.net/attachments/1259016060586426410/1275943194282037360/Screen_recording_2024-08-21_19.15.49.gif?ex=68bab9f3&is=68b96873&hm=645542c87e025d235e4fcfea5f624514522174266ebb84a5ab8291caf2d8061b&=&width=1100&height=623",
+    "addedBy": "prozoon700",
+    "addedAt": "2025-09-04T11:52:48.074Z"
   }
 ]

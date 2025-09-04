@@ -1,2 +1,6 @@
 config.json
 config copy.json
+info
+.env
+youtube_cookies.json
+youtube_cookies.txt

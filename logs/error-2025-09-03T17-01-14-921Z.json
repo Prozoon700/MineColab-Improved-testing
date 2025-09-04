@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-09-03T17:01:14.921Z",
+  "error": {
+    "date": "2025-09-03T17:01:14.921Z",
+    "reason": "image_url is not defined",
+    "details": "ReferenceError: image_url is not defined\n    at generateResponseWithContext (file:///workspaces/MineColab-Improved-testing/utils/mistral.js:230:17)\n    at generateResponseWithTimeout (file:///workspaces/MineColab-Improved-testing/events/messageCreate.js:152:17)\n    at handleMessageCreate (file:///workspaces/MineColab-Improved-testing/events/messageCreate.js:107:40)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"
+  },
+  "context": {
+    "messageContent": "?",
+    "userId": "762281328733192223",
+    "channelId": "1327966840013455390",
+    "isTicket": false
+  },
+  "response": {
+    "aiResponse": null,
+    "finalReply": "❌ There was a problem generating the response. Please try again in a few seconds... If the problem persists, please contact an administrator."
+  }
+}
