@@ -7,8 +7,26 @@ import {
     generateDependencyReport
 } from '@discordjs/voice';
 import play from 'play-dl';
+import fs from 'fs';
 
 console.log(generateDependencyReport());
+
+const cookiesFile = '/workspaces/MineColab-Improved-testing/data/youtube_cookies.txt';
+
+if (fs.existsSync(cookiesFile)) {
+    const cookiesContent = fs.readFileSync(cookiesFile, 'utf-8'); // leer el contenido del archivo
+    await play.setToken({
+        youtube: {
+            cookie: cookiesContent
+        }
+    });
+    console.log('✅ Cookies cargadas en play-dl');
+} else {
+    console.error("❌ Archivo de cookies no encontrado");
+}
+
+const stream = await play.stream('https://www.youtube.com/watch?v=A_g3lMcWVy0', { discordPlayerCompatibility: true });
+console.log(stream);
 
 class MusicManager {
     constructor() {
@@ -148,6 +166,7 @@ class MusicManager {
                 return false;
             }
 
+            console.log(song.url);
             const stream = await play.stream(song.url, { discordPlayerCompatibility: true });
             const resource = createAudioResource(stream.stream, {
                 inputType: stream.type,
